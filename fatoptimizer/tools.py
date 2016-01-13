@@ -1,6 +1,8 @@
 import ast
 import collections
 import marshal
+import sys
+
 
 FLOAT_TYPES = (int, float)
 COMPLEX_TYPES = FLOAT_TYPES + (complex,)
@@ -528,3 +530,10 @@ class ReplaceVariable(NodeTransformer, RestrictToFunctionDefMixin):
             return node
         new_value = self.name_mapping[node.id]
         return _new_constant(node, new_value)
+
+
+def Call(**kw):
+    if sys.version_info >= (3, 5):
+        return ast.Call(**kw)
+    else:
+        return ast.Call(starargs=None, kwargs=None, **kw)

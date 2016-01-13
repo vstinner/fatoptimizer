@@ -3,7 +3,7 @@
 # Prepare a release:
 #
 #  - git pull --rebase
-#  - run ./runtests.sh
+#  - run python3.6 test_fatoptimizer.py
 #  - update VERSION in fatoptimizer/__init__.py and setup.py
 #  - reset option in setup.py: DEBUG=False
 #  - set release date in the changelog of README.rst

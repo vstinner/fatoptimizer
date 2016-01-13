@@ -1,6 +1,6 @@
 import ast
 
-from .tools import copy_lineno, _new_constant
+from .tools import copy_lineno, _new_constant, Call
 
 
 class BuiltinGuard:
@@ -19,7 +19,7 @@ class BuiltinGuard:
         copy_lineno(node, func)
 
         names = _new_constant(node, tuple(sorted(self.names)))
-        call = ast.Call(func=func, args=[names], keywords=[])
+        call = Call(func=func, args=[names], keywords=[])
         copy_lineno(node, call)
         return call
 
@@ -67,10 +67,10 @@ class SpecializedFunction:
             mod = ast.Name(id=modname, ctx=ast.Load())
             name_func = ast.Name(id=func2.name, ctx=ast.Load())
             attr = ast.Attribute(value=name_func, attr='__code__', ctx=ast.Load())
-            call = ast.Call(func=ast.Attribute(value=mod,
-                                               attr='replace_consts', ctx=ast.Load()),
-                            args=[attr, mapping],
-                            keywords=[])
+            call = Call(func=ast.Attribute(value=mod,
+                                           attr='replace_consts', ctx=ast.Load()),
+                        args=[attr, mapping],
+                        keywords=[])
             copy_lineno(func, call)
 
             target = ast.Attribute(value=name_func, attr='__code__', ctx=ast.Store())
@@ -88,8 +88,8 @@ class SpecializedFunction:
         name_func = ast.Name(id=tmp_name, ctx=ast.Load())
         code = ast.Attribute(value=ast.Name(id=func2.name, ctx=ast.Load()),
                              attr='__code__', ctx=ast.Load())
-        call = ast.Call(func=specialize, args=[name_func, code, guards],
-                        keywords=[])
+        call = Call(func=specialize, args=[name_func, code, guards],
+                    keywords=[])
         yield ast.Expr(value=call)
 
         # func = tmp_name

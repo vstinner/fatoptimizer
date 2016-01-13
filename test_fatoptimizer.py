@@ -15,6 +15,27 @@ import unittest
 from unittest import mock
 
 
+if sys.version_info < (3, 5):
+    # RecursionError was introduced in Python 3.5
+    fatoptimizer.tools.RecursionError = RuntimeError
+
+
+need_python35 = unittest.skipIf(sys.version_info < (3, 5), "need python 3.5")
+
+
+
+if not hasattr(ast, 'Constant'):
+    # backport ast.Constant of the PEP 511
+    class Constant(ast.AST):
+        _attributes = ('lineno', 'col_offset')
+        _fields = ('value',)
+
+        def __init__(self, value):
+            self.value = value
+
+    ast.Constant = Constant
+
+
 def format_code(code):
     return textwrap.dedent(code).strip()
 
@@ -132,6 +153,7 @@ class VariableVisitorTests(unittest.TestCase):
         """
         self.check_vars(code, {'kw'})
 
+    @need_python35
     def test_nested(self):
         code = """
             def func(arg):
@@ -273,10 +295,11 @@ class BaseAstTests(unittest.TestCase):
     maxDiff = 15000
 
     def setUp(self):
-        # Disable the AST hook (if any)
-        old_transformers = sys.ast_transformers
-        self.addCleanup(setattr, sys, 'ast_transformers', old_transformers )
-        sys.ast_transformers = []
+        if hasattr(sys, 'ast_transformers'):
+            # Disable the AST hook (if any)
+            old_transformers = sys.ast_transformers
+            self.addCleanup(setattr, sys, 'ast_transformers', old_transformers )
+            sys.ast_transformers = []
 
         # Disable all optimizations by default
         self.config = fatoptimizer.Config()
@@ -1533,6 +1556,7 @@ class NamespaceTests(BaseAstTests):
         """
         self.check_namespace(code, {'g': UNSET})
 
+    @need_python35
     def test_async_function_def(self):
         code = """
             def func():
@@ -2229,6 +2253,7 @@ class NewOptimizerTests(BaseAstTests):
                 return 5 + x
         """)
 
+    @need_python35
     def test_AsyncFunctionDef(self):
         self.check_optimize("""
             x = 1
