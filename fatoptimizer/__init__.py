@@ -2,7 +2,7 @@ from .tools import OptimizerError
 from .config import Config
 from .optimizer import ModuleOptimizer as _ModuleOptimizer
 
-__version__ = '0.0'
+__version__ = '0.1'
 
 
 def optimize(tree, filename, config):

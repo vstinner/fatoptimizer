@@ -21,7 +21,7 @@
 #  - git commit
 #  - git push
 
-VERSION = '0.0'
+VERSION = '0.1'
 
 # put most of the code inside main() to be able to import setup.py in
 # test_fatoptimizer.py, to ensure that VERSION is the same than
