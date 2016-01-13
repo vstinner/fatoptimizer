@@ -33,7 +33,7 @@ optimizations.
 Major Bugs
 ==========
 
-* "import \*" is ignored
+* ``import *`` is ignored
 
 
 Minor Bugs
@@ -89,20 +89,22 @@ More complex to implement (without breaking Python semantics).
 
 * Remove useless temporary variables. Example:
 
-  def func():
-     res = 1
-     return res
+  Code::
 
-  Constant propagation:
+      def func():
+         res = 1
+         return res
 
-  def func():
-     res = 1
-     return 1
+  Constant propagation::
 
-  Remove res local variable:
+      def func():
+         res = 1
+         return 1
 
-  def func():
-     return 1
+  Remove *res* local variable::
+
+      def func():
+         return 1
 
   Maybe only for simple types (int, str). It changes object lifetime:
   https://bugs.python.org/issue2181#msg63090
@@ -126,16 +128,16 @@ Random
 
 Easy to implement.
 
-* Loop unrolling: support multiple targets
+* Loop unrolling: support multiple targets::
 
-  for x, y in ((1, 2), (3, 4)):
-      print(x, y)
+    for x, y in ((1, 2), (3, 4)):
+        print(x, y)
 
 * Tests:
 
-  - if a: if b: code => if a and b: code
+  - ``if a: if b: code`` => ``if a and b: code``
 
-* Optimize str%args and bytes%args
+* Optimize ``str%args`` and ``bytes%args``
 
 * Constant folding:
 
@@ -147,14 +149,13 @@ Easy to implement.
 
   * 2.0j ** 3.0
   * 1 < 2 < 3
-  * not x <= y <= z
-  * if x and True: pass => if x: pass
+  * ``if x and True: pass`` => ``if x: pass``
     http://bugs.python.org/issue7682
   * replace '(a and b) and c' (2 op) with 'a and b and c' (1 op),
     same for "or" operator
 
 * Call methods of builtin types if the object and arguments are constants.
-  Example: "h\\xe9ho".encode("utf-8") replaced with b"h\\xc3\\xa9ho".
+  Example: ``"h\\xe9ho".encode("utf-8")`` replaced ``with b"h\\xc3\\xa9ho"``.
 
 * Optimize fullvisit_AsyncFunctionDef
 
@@ -190,13 +191,13 @@ Unknown speedup, complex to implement.
 * Implement CALL_METHOD bytecode, but execute the following code correctly
   (output must be 1, 2 and not 1, 1)::
 
-    class C(object):
-        def foo(self):
-            return 1
-    c = c()
-    print c.foo()
-    c.foo = lambda: 2
-    print c.foo()
+      class C(object):
+          def foo(self):
+              return 1
+      c = c()
+      print c.foo()
+      c.foo = lambda: 2
+      print c.foo()
 
   Need a guard on C.foo?
 
@@ -227,10 +228,10 @@ Unknown speedup, complex to implement.
 
 * Constant propagation, copy accross namespaces:
 
-  - list-comprehension has its own separated namespace:
+  - list-comprehension has its own separated namespace::
 
-    n = 100
-    seq = [randrange(n) for i in range(n)]
+        n = 100
+        seq = [randrange(n) for i in range(n)]
 
   - copy globals to locals: need a guard on globals
 
