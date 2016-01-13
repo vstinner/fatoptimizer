@@ -75,7 +75,7 @@ def _get_assign_names(targets, load_names, store_names):
             raise ComplexAssignment(orig_target)
         else:
             raise Exception("unsupported assign target: %s"
-                            % ast.dump(orig_target))
+                            % ast.dump(target))
 
 
 class GlobalVisitor(NodeVisitor, RestrictToFunctionDefMixin):
