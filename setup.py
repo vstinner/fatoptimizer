@@ -4,7 +4,7 @@
 #
 #  - git pull --rebase
 #  - run ./runtests.sh
-#  - update VERSION in fat.c and setup.py
+#  - update VERSION in fatoptimizer/__init__.py and setup.py
 #  - reset option in setup.py: DEBUG=False
 #  - set release date in the changelog of README.rst
 #  - git commit -a
@@ -51,7 +51,7 @@ def main():
         'author': 'Victor Stinner',
         'author_email': 'victor.stinner@gmail.com',
         'classifiers': CLASSIFIERS,
-        'packages': ['fatoptimizer'],
+        #'packages': ['fatoptimizer'],
     }
     setup(**options)
 

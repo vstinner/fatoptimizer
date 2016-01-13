@@ -2782,5 +2782,12 @@ class CompleteTests(BaseAstTests):
             pass
         ''')
 
+
+class MiscTests(unittest.TestCase):
+    def test_version(self):
+        import setup
+        self.assertEqual(fatoptimizer.__version__, setup.VERSION)
+
+
 if __name__ == "__main__":
     unittest.main()

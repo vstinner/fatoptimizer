@@ -2,6 +2,8 @@ from .tools import pretty_dump, OptimizerError
 from .config import Config
 from .optimizer import ModuleOptimizer as _ModuleOptimizer
 
+__version__ = '0.0'
+
 
 def optimize(tree, filename, config):
     optimizer = _ModuleOptimizer(config, filename)

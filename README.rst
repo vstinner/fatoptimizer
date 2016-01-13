@@ -15,37 +15,20 @@ optimized code. The optimizer is the ``fatoptimizer`` module.
 * fat module: https://github.com/haypo/fat
 * fatoptimizer module: https://github.com/haypo/fatoptimizer
 
+fatoptimizer requires Python 3.6 patched with the PEP 511 (ast.Constant,
+sys.ast_tranformers).
+
 .. warning::
    The API is not stable yet.
 
 
-fat module API
-==============
+fatoptimizer module API
+=======================
 
-Functions:
-
-* replace_consts(code, mapping): create a new code object and replacing
-  constants with a mapping:
-  ``new_consts = tuple(mapping.get(const, const) for const in consts)``
-* specialize(func, code, guards): specialize the *func* function, add a
-  specialize code with guards.  *code* must be a callable or code object,
-  *guards* must be a non-empty sequence of guards.
-* get_specialized(func): get the list of specialized codes with guards as
-  (code, guards) tuples.
-
-Guards:
-
-* GuardArgType(arg_index, arg_types): check the type of the nth argument,
-  arg_types must be a sequence of types
-* GuardBuiltins(dict, names): watch for builtins.__dict__[name] for all names
-* GuardDict(dict, keys): watch for dict[key] for all keys
-* GuardFunc(func): watch for func.__code__
-* GuardGlobals(names): watch for globals()[name] for all keys
-* GuardTypeDict(type, attrs): watch for type.__dict__[attr] for all attrs
-
-Note: GuardGlobals and GuardTypeDict are not types, but helper functions.
-
-``fat.__version__`` is the version string.
+* Config()
+* pretty_dump()
+* OptimizerError
+* optimize(tree, filename, config)
 
 
 Installation
@@ -53,7 +36,7 @@ Installation
 
 Type::
 
-    pip install fat
+    pip install fatoptimizer
 
 Manual installation::
 
@@ -65,7 +48,7 @@ Run tests
 
 Type::
 
-    ./runtests.sh
+    python3.6 test_fatoptimizer.py
 
 
 Changelog
