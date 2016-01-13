@@ -57,8 +57,14 @@ Run manually tests::
 
     python3 test_fatoptimizer.py
 
+There are also integration tests which requires a Python 3.6 with patches PEP
+509, PEP 510 and PEP 511. Run integration tests::
+
+    python3.6 -X fat test_fat_config.py
+    python3.6 -X fat test_fat_size.py
+
 
 Changelog
 =========
 
-* 2016-01-13: First public release.
+* 2016-01-14: First public release.

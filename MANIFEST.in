@@ -3,3 +3,6 @@ include MANIFEST.in
 include README.rst
 include TODO.rst
 include tox.ini
+include test_fat_config.py
+include test_fat_size.py
+include test_fatoptimizer.py
