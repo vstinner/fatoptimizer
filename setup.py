@@ -51,7 +51,7 @@ def main():
         'author': 'Victor Stinner',
         'author_email': 'victor.stinner@gmail.com',
         'classifiers': CLASSIFIERS,
-        #'packages': ['fatoptimizer'],
+        'packages': ['fatoptimizer'],
     }
     setup(**options)
 

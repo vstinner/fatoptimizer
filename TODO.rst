@@ -1,7 +1,6 @@
 TODO
 ====
 
-* Remove fatoptimizer.pretty_dump() or check the copyright
 * constant vs literal: optimize literal in contant folding, but use contant for
   *constant* folding. Add ast.Literal?
 

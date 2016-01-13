@@ -26,7 +26,6 @@ fatoptimizer module API
 =======================
 
 * Config()
-* pretty_dump()
 * OptimizerError
 * optimize(tree, filename, config)
 

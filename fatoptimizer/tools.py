@@ -219,54 +219,6 @@ def copy_lineno(orig_node, new_node):
     _set_lineno(new_node, orig_node.lineno, orig_node.col_offset)
 
 
-def pretty_dump(node, annotate_fields=True, include_attributes=False,
-                lineno=None, indent='  '):
-    """
-    Return a formatted dump of the tree in *node*.  This is mainly useful for
-    debugging purposes.  The returned string will show the names and the values
-    for fields.  This makes the code impossible to evaluate, so if evaluation is
-    wanted *annotate_fields* must be set to False.  Attributes such as line
-    numbers and column offsets are not dumped by default.  If this is wanted,
-    *include_attributes* can be set to True.
-
-    Recipe by Alex Leone, January 2010:
-    http://alexleone.blogspot.fr/2010/01/python-ast-pretty-printer.html
-    """
-    def _format(node, level=0):
-        if isinstance(node, ast.AST):
-            fields = [(a, _format(b, level)) for a, b in ast.iter_fields(node)]
-            if include_attributes and node._attributes:
-                fields.extend([(a, _format(getattr(node, a), level))
-                               for a in node._attributes])
-            if lineno and getattr(node, 'lineno', None):
-                fields.append(('lineno', str(node.lineno)))
-            return ''.join([
-                node.__class__.__name__,
-                '(',
-                ', '.join(('%s=%s' % field for field in fields)
-                           if annotate_fields else
-                           (b for a, b in fields)),
-                ')'])
-        elif isinstance(node, list):
-            lines = ['[']
-            lines.extend((indent * (level + 2) + _format(x, level + 2) + ','
-                         for x in node))
-            if len(lines) > 1:
-                lines.append(indent * (level + 1) + ']')
-            else:
-                lines[-1] += ']'
-            return '\n'.join(lines)
-        return repr(node)
-    if isinstance(node, list):
-        nodes = [_format(item, 1) for item in node]
-        nodes = (',\n' + indent).join(nodes)
-        spaces = ' ' * (len(indent) - 1)
-        return '[%s%s]' % (spaces, nodes)
-    if not isinstance(node, ast.AST):
-        raise TypeError('expected AST, got %r' % node.__class__.__name__)
-    return _format(node)
-
-
 class NodeVisitorMeta(type):
     def __new__(mcls, name, bases, namespace):
         self_class = super().__new__(mcls, name, bases, namespace)
