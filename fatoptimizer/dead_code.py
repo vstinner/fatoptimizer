@@ -1,6 +1,6 @@
 import ast
 
-from .tools import (OptimizerStep, FindNodes,
+from .tools import (OptimizerStep,
     copy_lineno, ast_contains, copy_node, compact_dump)
 
 

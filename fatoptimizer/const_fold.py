@@ -3,7 +3,7 @@ import math
 import operator
 
 from .tools import (OptimizerStep, UNSET,
-    FLOAT_TYPES, COMPLEX_TYPES, PRIMITIVE_TYPES, ITERABLE_TYPES,
+    FLOAT_TYPES, COMPLEX_TYPES, ITERABLE_TYPES,
     copy_lineno, get_constant, get_constant_size, copy_node, get_literal,
     compact_ascii)
 

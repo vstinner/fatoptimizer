@@ -1,7 +1,6 @@
 import ast
 
-from .tools import (OptimizerStep, get_constant, compact_dump,
-    FindNodes, _new_constant, copy_lineno, UNSET)
+from .tools import OptimizerStep, compact_dump, FindNodes, copy_lineno
 
 
 CANNOT_UNROLL = (ast.Break, ast.Continue, ast.Raise)

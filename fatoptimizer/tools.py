@@ -1,6 +1,5 @@
 import ast
 import collections
-import functools
 import marshal
 
 FLOAT_TYPES = (int, float)

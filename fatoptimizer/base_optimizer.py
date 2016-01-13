@@ -1,7 +1,7 @@
 import ast
 
 from .namespace import Namespace
-from .tools import NodeTransformer, OptimizerStep, UNSET
+from .tools import NodeTransformer
 
 
 _COND_BLOCK = {ast.If, ast.For, ast.While, ast.Try}

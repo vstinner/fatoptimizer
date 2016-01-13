@@ -1,5 +1,4 @@
 import ast
-import itertools
 
 from .tools import OptimizerStep, UNSET, get_literal
 from .specialized import BuiltinGuard
