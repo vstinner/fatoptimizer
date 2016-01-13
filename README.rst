@@ -47,7 +47,15 @@ Run tests
 
 Type::
 
-    python3.6 test_fatoptimizer.py
+    tox
+
+You may need to install or update tox::
+
+    pip3 install -U tox
+
+Run manually tests::
+
+    python3 test_fatoptimizer.py
 
 
 Changelog

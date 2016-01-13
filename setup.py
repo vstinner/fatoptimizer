@@ -3,7 +3,7 @@
 # Prepare a release:
 #
 #  - git pull --rebase
-#  - run python3.6 test_fatoptimizer.py
+#  - run tests: tox
 #  - update VERSION in fatoptimizer/__init__.py and setup.py
 #  - reset option in setup.py: DEBUG=False
 #  - set release date in the changelog of README.rst
@@ -22,22 +22,25 @@
 #  - git commit
 #  - git push
 
-from distutils.core import setup
-
 VERSION = '0.0'
 
-CLASSIFIERS = [
-    'Development Status :: 4 - Beta',
-    'Intended Audience :: Developers',
-    'License :: OSI Approved :: MIT License',
-    'Natural Language :: English',
-    'Operating System :: OS Independent',
-    'Programming Language :: C',
-    'Programming Language :: Python',
-    'Topic :: Software Development :: Libraries :: Python Modules',
-]
-
+# put most of the code inside main() to be able to import setup.py in
+# test_fatoptimizer.py, to ensure that VERSION is the same than
+# fatoptimizer.__version__.
 def main():
+    CLASSIFIERS = [
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Natural Language :: English',
+        'Operating System :: OS Independent',
+        'Programming Language :: C',
+        'Programming Language :: Python',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+    ]
+
+    from distutils.core import setup
+
     with open('README.rst') as f:
         long_description = f.read().strip()
 
