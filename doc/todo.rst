@@ -9,6 +9,13 @@ TODO
 
 * constant vs literal: optimize literal in contant folding, but use contant for
   *constant* folding. Add ast.Literal?
+* PEP 511: extract ast.Constant patch
+
+  * compile: don't merge "equal but different" constants like 0 (int) and 0.0
+    (float)
+  * marshal: use the empty frozenset singleton
+  * add ast.Constant
+  * fixes for docstrings
 
 
 Goal
