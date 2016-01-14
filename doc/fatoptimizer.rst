@@ -1,5 +1,3 @@
-.. _fatoptimizer:
-
 +++++++++++++++++++
 fatoptimizer module
 +++++++++++++++++++

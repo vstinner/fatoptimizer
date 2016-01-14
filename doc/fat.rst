@@ -4,19 +4,16 @@
 fat module
 ++++++++++
 
-FAT Python is a static optimizer for Python 3.6 using function specialization
-with guards.
-
-The ``fat`` module is the runtime part of the optimizer. It implements guards
-used to specialize functions.
-
-The ``fat`` module is required to run code optimized by the ``fatoptimizer``
-module.
+The ``fat`` module implements fast guards. The :ref:`fatoptimizer optimizer
+<fatoptimizer>` specialize functions. It uses ``fat`` guards to only use the
+specialize bytecode under some conditions.
 
 * `fat project at GitHub
   <https://github.com/haypo/fat>`_
 * `fat project at the Python Cheeseshop (PyPI)
   <https://pypi.python.org/pypi/fat>`_
+
+The ``fat`` module requires a Python 3.6 patched with PEP 510 patch.
 
 
 fat module API

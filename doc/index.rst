@@ -1,13 +1,14 @@
+.. _fatoptimizer:
+
 ++++++++++++
 fatoptimizer
 ++++++++++++
 
-FAT Python is a static optimizer for Python 3.6 using function specialization
-with guards.
+``fatoptimizer`` is a static optimizer for Python 3.6 using function
+specialization with guards. It is implemented as an AST optimizer.
 
-The optimizer is the :ref:`fatoptimizer module <fatoptimizer>`. The :ref:`fat
-module <fat>` is the runtime part of the optimizer, required to run optimized
-code.
+Optimized code requires the :ref:`fat module <fat>` at runtime if at least one
+function was specialized.
 
 Links:
 
@@ -21,11 +22,15 @@ Links:
 * `FAT Python
   <https://faster-cpython.readthedocs.org/fat_python.html#fat-python>`_
 
+fatoptimizer requires a Python 3.6 patched with the PEP 511 (``ast.Constant``,
+``sys.ast_tranformers``).
+
+
 Table Of Contents
 =================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    fatoptimizer
    fat
