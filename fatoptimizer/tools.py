@@ -221,7 +221,7 @@ def copy_lineno(orig_node, new_node):
 
 
 def pretty_dump(node, annotate_fields=True, include_attributes=False,
-                lineno=None, indent='  '):
+                lineno=False, indent='  '):
     """
     Return a formatted dump of the tree in *node*.  This is mainly useful for
     debugging purposes.  The returned string will show the names and the values
