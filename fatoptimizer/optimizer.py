@@ -3,7 +3,7 @@ import linecache
 
 from .namespace import (VariableVisitor, ComplexAssignment,
     NamespaceStep)
-from .tools import (copy_lineno, _new_constant,
+from .tools import (copy_lineno, _new_constant, pretty_dump,
     ReplaceVariable, FindStrVisitor, get_literal,
     RestrictToFunctionDefMixin)
 from .specialized import BuiltinGuard, SpecializedFunction

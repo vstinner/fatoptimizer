@@ -1,4 +1,4 @@
-from .tools import OptimizerError
+from .tools import pretty_dump, OptimizerError
 from .config import Config
 from .optimizer import ModuleOptimizer as _ModuleOptimizer
 

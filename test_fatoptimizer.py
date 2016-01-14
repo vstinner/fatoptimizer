@@ -309,8 +309,8 @@ class BaseAstTests(unittest.TestCase):
         # ast objects don't support comparison,
         # so compare their text representation
         tree1 = SpecializeConstant().visit(tree1)
-        text1 = ast.dump(tree1)
-        text2 = ast.dump(tree2)
+        text1 = fatoptimizer.pretty_dump(tree1)
+        text2 = fatoptimizer.pretty_dump(tree2)
         self.assertEqual(text1, text2)
 
     def optimize(self, source):
