@@ -4,7 +4,7 @@
 #
 #  - git pull --rebase
 #  - run tests: tox
-#  - update VERSION in fatoptimizer/__init__.py and setup.py
+#  - update VERSION in setup.py, fatoptimizer/__init__.py and doc/conf.py
 #  - set release date in the changelog of README.rst
 #  - git commit -a
 #  - git push

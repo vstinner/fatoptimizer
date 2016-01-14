@@ -1,9 +1,11 @@
+.. _fatoptimizer:
+
 +++++++++++++++++++
 fatoptimizer module
 +++++++++++++++++++
 
-fatoptimizer module API
-=======================
+fatoptimizer API
+================
 
 .. warning::
    The API is not stable yet.

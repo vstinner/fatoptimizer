@@ -20,7 +20,7 @@ The function optimizer is splitted into two stages:
 Main classes:
 
 * ModuleOptimizer: Optimizer for ast.Module nodes. It starts by looking for
-  :ref:`__astoptimizer__ configuration <fat-config>`.
+  :ref:`__astoptimizer__ configuration <config>`.
 * FunctionOptimizer: Optimizer for ast.FunctionDef nodes. It starts by running
   FunctionOptimizerStage1.
 * Optimizer: Optimizer for other AST nodes.
