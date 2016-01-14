@@ -33,7 +33,7 @@ Table Of Contents
 
    fatoptimizer
    fat
-   optim
+   optimizations
    benchmarks
    misc
    todo
