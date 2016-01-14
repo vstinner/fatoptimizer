@@ -23,33 +23,35 @@
 
 VERSION = '0.1'
 
+DESCRIPTION = ('Static optimizer for Python 3.6 using function '
+               'specialization with guards')
+CLASSIFIERS = [
+    'Development Status :: 4 - Beta',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: MIT License',
+    'Natural Language :: English',
+    'Operating System :: OS Independent',
+    'Programming Language :: C',
+    'Programming Language :: Python',
+    'Topic :: Software Development :: Libraries :: Python Modules',
+]
+
 # put most of the code inside main() to be able to import setup.py in
 # test_fatoptimizer.py, to ensure that VERSION is the same than
 # fatoptimizer.__version__.
 def main():
-    CLASSIFIERS = [
-        'Development Status :: 4 - Beta',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Natural Language :: English',
-        'Operating System :: OS Independent',
-        'Programming Language :: C',
-        'Programming Language :: Python',
-        'Topic :: Software Development :: Libraries :: Python Modules',
-    ]
-
     from distutils.core import setup
 
-    with open('README.rst') as f:
-        long_description = f.read().strip()
+    with open('README.rst') as fp:
+        long_description = fp.read().strip()
 
     options = {
         'name': 'fatoptimizer',
         'version': VERSION,
         'license': 'MIT license',
-        'description': 'Static optimizer specializing functions with guards for Python 3.6',
+        'description': DESCRIPTION,
         'long_description': long_description,
-        'url': 'https://github.com/haypo/fatoptimizer',
+        'url': 'https://fatoptimizer.readthedocs.org/en/latest/',
         'author': 'Victor Stinner',
         'author_email': 'victor.stinner@gmail.com',
         'classifiers': CLASSIFIERS,
