@@ -34,5 +34,6 @@ Table Of Contents
    fatoptimizer
    fat
    optim
+   benchmarks
    misc
    todo
