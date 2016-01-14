@@ -141,6 +141,9 @@ Random
 
 Easy to implement.
 
+* [Python-ideas] (FAT Python) Convert keyword arguments to positional?
+  https://mail.python.org/pipermail/python-ideas/2016-January/037874.html
+
 * Loop unrolling: support multiple targets::
 
     for x, y in ((1, 2), (3, 4)):
