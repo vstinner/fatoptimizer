@@ -92,7 +92,7 @@ Guard types
    (``dict[key]`` for all keys).
 
 
-.. class:: GuardFunc(func)``
+.. class:: GuardFunc(func)
 
    Watch for ``func.__code__``.
 
