@@ -1,7 +1,10 @@
 include COPYING
 include MANIFEST.in
 include README.rst
-include TODO.rst
+
+include doc/conf.py doc/make.bat doc/Makefile
+include doc/*.rst
+
 include tox.ini
 include test_fat_config.py
 include test_fat_site.py

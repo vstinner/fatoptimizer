@@ -25,8 +25,10 @@ Table Of Contents
 =================
 
 .. toctree::
+   :maxdepth: 2
 
    fatoptimizer
    fat
    optim
    misc
+   todo
