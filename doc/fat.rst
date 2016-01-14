@@ -53,6 +53,8 @@ Functions
 See the PEP 510 for the API of ``specialize()`` and ``get_specialized()``.
 
 
+.. _guard:
+
 Guard types
 -----------
 

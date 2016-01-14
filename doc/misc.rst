@@ -129,54 +129,6 @@ Example of function with side effect::
         return s
 
 
-.. _guard:
-
-Guards
-======
-
-Guards:
-
-* FuncGuard: check if a function was modified (currently only __code__ is
-  checked)
-* DictGuard: check if a dictionary key is created (if it didn't exist) or
-  modified
-* ArgTypeGuard: check the type of function arguments
-
-Example: Guard on a builtin function
-------------------------------------
-
-Example of function::
-
-    def use_builtin_len():
-        return len("abc")
-
-To replace ``len("abc")``, we have to ensure that:
-
-* the builtin ``len()`` function was not overriden
-  with ``builtins.len = mock_len``
-* the ``len`` symbol was not added to the function globals which are the module
-  globals
-
-Example: Guard to inline a function
------------------------------------
-
-Example of function::
-
-    def is_python(filename):
-        return filename.endswith('.py')
-
-    def filter_python(filenames):
-        return [filename for filename in filenames
-                if is_python(filename)]
-
-To replace ``is_python(filename)`` with ``filename.endswith('.py')`` in
-``filter_python()``, we have to ensure that:
-
-* the ``is_python`` symbol was not modified in the namespace (module globals)
-* the ``is_python()`` function was not modified
-
-
-
 Limitations and Python semantic
 ===============================
 
