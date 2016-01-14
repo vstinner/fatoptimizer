@@ -18,7 +18,6 @@ Links:
   <https://github.com/haypo/fatoptimizer>`_ (code, bug tracker)
 * `fatoptimizer project at the Python Cheeseshop (PyPI)
   <https://pypi.python.org/pypi/fatoptimizer>`_ (download releases)
-* `fat project <https://faster-cpython.readthedocs.org/fat.html>`_
 * `FAT Python
   <https://faster-cpython.readthedocs.org/fat_python.html#fat-python>`_
 

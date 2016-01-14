@@ -47,29 +47,6 @@ body which uses "i". We need to rerun the optimizer on this new AST tree to run
 optimizations like constant propagation or constant folding.
 
 
-Files
------
-
-FAT python:
-
-* Object/dictobject.c: add __version__
-* Modules/fat.c: specialized functions with guards
-* Tests
-
-  - Lib/test/test_fat.py
-  - Lib/test/fattester.py
-  - Lib/test/fattesterast.py
-  - Lib/test/fattesterast2.py
-
-Other changes:
-
-* Python/ceval.c: bugfixes when builtins is not a dict type
-* Python/sysmodule.c: add sys.flags.fat
-* Modules/main.c: add -F command line option
-
-See also the :ref:`fatoptimizer <fatoptimizer>`.
-
-
 Possible optimizations
 ======================
 
