@@ -268,7 +268,15 @@ Possible worse performance:
 Changelog
 =========
 
-* 2016-01-14: First public release.
+* 2016-01-18: Version 0.1
+
+  * Add ``fatoptimizer.pretty_dump()``
+  * Add Sphinx documentation: ``doc/`` directory
+  * Add benchmark scripts: ``benchmarks/`` directory
+  * Update ``fatoptimizer._register()`` for the new version of the PEP 511
+    (``sys.set_code_transformers()``)
+
+* 2016-01-14: First public release, version 0.0.
 
 
 Constants

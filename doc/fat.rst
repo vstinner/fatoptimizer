@@ -147,4 +147,4 @@ Changelog
   * Rename GuardGlobals() to guard_globals()
   * Rename GuardTypeDict() to guard_dict_type()
 
-* 2016-01-13: First public release.
+* 2016-01-13: First public release, version 0.0.
