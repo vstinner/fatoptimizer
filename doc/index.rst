@@ -19,7 +19,7 @@ Links:
 * `fatoptimizer project at the Python Cheeseshop (PyPI)
   <https://pypi.python.org/pypi/fatoptimizer>`_ (download releases)
 * `FAT Python
-  <https://faster-cpython.readthedocs.org/fat_python.html#fat-python>`_
+  <https://faster-cpython.readthedocs.org/fat_python.html>`_
 
 fatoptimizer requires a Python 3.6 patched with the PEP 511 (``ast.Constant``,
 ``sys.ast_tranformers``).

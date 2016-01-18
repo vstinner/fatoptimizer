@@ -102,15 +102,18 @@ Guard types
 Guard helper functions
 ----------------------
 
-.. function:: GuardGlobals(names)
+.. function:: guard_globals(names)
 
-   Create ``GuardDict(globals), names)``.
+   Create ``GuardDict(globals), names): watch for ``globals()[name]`` for all
+   *names*.
 
 
-.. function:: GuardTypeDict(type, attrs)
+.. function:: guard_type_dict(type, attrs)
 
    Create ``GuardDict(type.__dict__, attrs)`` but access the real type
    dictionary, not ``type.__dict`` which is a read-only proxy.
+
+   Watch for ``type.attr`` (``type.__dict__[attr]``) for all *attrs*.
 
 
 Installation
@@ -137,5 +140,11 @@ Type::
 
 Changelog
 =========
+
+* 2016-01-18: Version 0.1
+
+  * GuardBuiltins check remembers if guard init failed
+  * Rename GuardGlobals() to guard_globals()
+  * Rename GuardTypeDict() to guard_dict_type()
 
 * 2016-01-13: First public release.
