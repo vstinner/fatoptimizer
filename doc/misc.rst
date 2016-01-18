@@ -9,7 +9,7 @@ Steps and stages
 ----------------
 
 The optimizer is splitted into multiple steps. Each optimization has its own
-step: astoptimizer.const_fold.ConstantFolding implements for example constant
+step: fatoptimizer.const_fold.ConstantFolding implements for example constant
 folding.
 
 The function optimizer is splitted into two stages:
@@ -20,7 +20,7 @@ The function optimizer is splitted into two stages:
 Main classes:
 
 * ModuleOptimizer: Optimizer for ast.Module nodes. It starts by looking for
-  :ref:`__astoptimizer__ configuration <config>`.
+  :ref:`__fatoptimizer__ configuration <config>`.
 * FunctionOptimizer: Optimizer for ast.FunctionDef nodes. It starts by running
   FunctionOptimizerStage1.
 * Optimizer: Optimizer for other AST nodes.
@@ -171,7 +171,7 @@ specialized function returns ``True``, whereas the original function returns
 It is possible to work around this limitation by adding the following
 :ref:`configuration <config>` at the top of the file::
 
-    __astoptimizer__ = {'copy_builtin_to_constant': False}
+    __fatoptimizer__ = {'copy_builtin_to_constant': False}
 
 But the following use cases works as expected in FAT mode::
 
@@ -305,18 +305,6 @@ Supported literal types:
 
 * (all constant types)
 * containers: ``list``, ``dict``, ``set``
-
-
-TODO list
-=========
-
-* Decorators are not supported (yet?)
-* Keywords are not supported yet
-
-See the `fatoptimizer TODO.rst file
-<https://github.com/haypo/fatoptimizer/blob/master/TODO.rst>`_.
-
-
 
 
 FunctionOptimizer

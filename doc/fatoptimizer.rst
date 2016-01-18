@@ -28,6 +28,8 @@ fatoptimizer API
 
    Configuration of the optimizer.
 
+   See :ref:`fatoptimizer configuration <config>`.
+
 
 .. class:: FATOptimizer(config)
 
@@ -60,7 +62,7 @@ Configuration
 =============
 
 It is possible to configure the AST optimizer per module by setting
-the ``__astoptimizer__`` variable. Configuration keys:
+the ``__fatoptimizer__`` variable. Configuration keys:
 
 * ``enabled`` (``bool``): set to ``False`` to disable all optimization (default: true)
 
@@ -99,11 +101,13 @@ the ``__astoptimizer__`` variable. Configuration keys:
 
 Example to disable all optimizations in a module::
 
-    __astoptimizer__ = {'enabled': False}
+    __fatoptimizer__ = {'enabled': False}
 
 Example to disable the constant folding optimization::
 
-    __astoptimizer__ = {'constant_folding': False}
+    __fatoptimizer__ = {'constant_folding': False}
+
+See the :class:`Config` class.
 
 
 Run tests

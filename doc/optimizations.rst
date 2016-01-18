@@ -381,7 +381,7 @@ in the middle of the function, the specialized bytecode still uses the old
 builtin function. To use the optimization on a project, you may have to add the
 following :ref:`configuration <config>` at the top of the file::
 
-    __astoptimizer__ = {'copy_builtin_to_constant': False}
+    __fatoptimizer__ = {'copy_builtin_to_constant': False}
 
 :ref:`Configuration option <config>`: ``copy_builtin_to_constant``.
 
