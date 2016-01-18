@@ -10,11 +10,8 @@ import textwrap
 import unittest
 
 
-if 'fat' not in sys.implementation.ast_transformers:
+if not any(transformer.name == 'fat' for transformer in sys.get_code_transformers()):
     raise Exception("test must be run with python3 -X fat")
-
-if not sys.ast_transformers:
-    raise Exception("fatoptimizer is not installed? %r" % sys.implementation.optim_tag)
 
 
 def disassemble(obj):

@@ -19,6 +19,11 @@ fatoptimizer API
    Configuration of the optimizer.
 
 
+.. class:: FATOptimizer(config)
+
+   Code transformers for ``sys.set_code_transformers()``.
+
+
 .. class:: OptimizerError
 
    Exception raised on bugs in the optimizer.

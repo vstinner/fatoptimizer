@@ -12,20 +12,15 @@ import unittest
 # Disable the AST optimizer on this module
 __fatoptimizer__ = {'enabled': False}
 
-if 'fat' not in sys.implementation.ast_transformers:
-    raise Exception("test must be run with python3 -X fat")
-
 def create_optimizer():
     config = fatoptimizer.Config()
     config.strict = False
     config.copy_builtin_to_constant = {'chr'}
 
-    def optimizer(tree, filename):
-        return fatoptimizer.optimize(tree, filename, config)
-    return optimizer
+    return fatoptimizer.FATOptimizer(config)
 
 # Replace existing AST transformers with our optimizer
-sys.ast_transformers[:] = [create_optimizer()]
+sys.set_code_transformers([create_optimizer()])
 
 
 def disassemble(obj):
