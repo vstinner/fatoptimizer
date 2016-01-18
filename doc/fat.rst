@@ -99,7 +99,7 @@ Guard helper functions
 
 .. function:: guard_globals(names)
 
-   Create ``GuardDict(globals), names): watch for ``globals()[name]`` for all
+   Create ``GuardDict(globals), names)``: watch for ``globals()[name]`` for all
    *names*.
 
 
