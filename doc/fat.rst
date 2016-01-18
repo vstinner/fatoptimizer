@@ -50,11 +50,6 @@ Functions
    Get the list of specialized codes with guards as ``(code, guards)`` tuples.
 
 
-.. function:: def pretty_dump(node, annotate_fields=True, include_attributes=False, lineno=False, indent='  ')
-
-   Dump an AST tree as a string on multiple lines.
-
-
 See the PEP 510 for the API of ``specialize()`` and ``get_specialized()``.
 
 
