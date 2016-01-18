@@ -21,7 +21,7 @@
 #  - git commit
 #  - git push
 
-VERSION = '0.1'
+VERSION = '0.2'
 
 DESCRIPTION = ('Static optimizer for Python 3.6 using function '
                'specialization with guards')
