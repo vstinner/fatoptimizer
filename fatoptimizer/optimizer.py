@@ -5,7 +5,7 @@ from .namespace import (VariableVisitor, ComplexAssignment,
     NamespaceStep)
 from .tools import (copy_lineno, _new_constant, pretty_dump,
     ReplaceVariable, FindStrVisitor, get_literal,
-    RestrictToFunctionDefMixin)
+    RestrictToFunctionDefMixin, UNSET)
 from .specialized import BuiltinGuard, SpecializedFunction
 from .base_optimizer import BaseOptimizer
 from .const_propagate import ConstantPropagation
@@ -316,8 +316,8 @@ class ModuleOptimizer(Optimizer):
         return self._fat_module
 
     def _replace_config(self, node):
-        config = get_literal(node)
-        if not isinstance(config, dict):
+        config = get_literal(node, types=dict, constant_items=True)
+        if config is UNSET:
             # ignore invalid config
             return True
 

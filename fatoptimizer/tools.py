@@ -150,59 +150,73 @@ def get_constant(node, *, types=None):
         return _get_constant(node)
 
 
-def _get_literal_list(seq):
+def _get_node_list(seq, literal=False):
     values = []
     for value in seq:
         # only get constant items, otherwise optimizations will not produce
         # a constant
-        value = get_constant(value)
+        if literal:
+            value = _get_literal(value)
+        else:
+            value = get_constant(value)
         if value is UNSET:
             return UNSET
         values.append(value)
     return values
 
 
-def _get_literal(node):
+def _get_literal(node, constant_items=False):
+    use_literal = (not constant_items)
+
     value = get_constant(node)
     if value is not UNSET:
         return value
 
+    if isinstance(node, ast.Tuple):
+        elts = _get_node_list(node.elts, literal=use_literal)
+        if elts is UNSET:
+            return UNSET
+        return list(elts)
+
+    if isinstance(node, ast.List):
+        elts = _get_node_list(node.elts, literal=use_literal)
+        if elts is UNSET:
+            return UNSET
+        return list(elts)
+
+    if isinstance(node, ast.Set):
+        # elements must be hashable
+        elts = _get_node_list(node.elts)
+        if elts is UNSET:
+            return UNSET
+        return set(elts)
+
     if isinstance(node, ast.Dict):
         # FIXME: this code is slow, only do it when get_literal() is
         # called with types==dict (or dict in types)
-        keys = _get_literal_list(node.keys)
+
+        # keys musts be hashable
+        keys = _get_node_list(node.keys)
         if keys is UNSET:
             return UNSET
 
-        values = _get_literal_list(node.values)
+        values = _get_node_list(node.values, literal=use_literal)
         if values  is UNSET:
             return UNSET
 
         return dict(zip(keys, values))
 
-    if isinstance(node, ast.Set):
-        elts = _get_literal_list(node.elts)
-        if elts is UNSET:
-            return UNSET
-        return set(elts)
-
-    if isinstance(node, ast.List):
-        elts = _get_literal_list(node.elts)
-        if elts is UNSET:
-            return UNSET
-        return list(elts)
-
     return UNSET
 
 
-def get_literal(node, *, types=None):
+def get_literal(node, *, constant_items=False, types=None):
     if types is not None:
-        value = _get_literal(node)
+        value = _get_literal(node, constant_items)
         if not isinstance(value, types):
             return UNSET
         return value
     else:
-        return _get_literal(node)
+        return _get_literal(node, constant_items)
 
 
 def _set_lineno(node, lineno, col_offset):

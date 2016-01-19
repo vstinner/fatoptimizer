@@ -8,7 +8,9 @@ from .tools import (OptimizerStep, UNSET,
     compact_ascii)
 
 
+# set and frozenset don't support indexing
 SUBSCRIPT_INDEX_TYPES = tuple(set(ITERABLE_TYPES) - {set, frozenset})
+# set, frozenset, dict are not subscriptable
 SUBSCRIPT_SLICE_TYPES = tuple(set(ITERABLE_TYPES) - {set, frozenset, dict})
 SLICE_ARG_TYPES = (int, type(None))
 
@@ -312,7 +314,7 @@ class ConstantFolding(OptimizerStep):
             return
 
         if isinstance(value, dict):
-            # dict[key] accepts any hashable key
+            # dict[key] accepts any hashable key (all constants are hashable)
             index_types = None
         else:
             index_types = int
@@ -348,11 +350,16 @@ class ConstantFolding(OptimizerStep):
             return
 
         if node_op in (ast.In, ast.NotIn):
+            left_hashable = True
             right_types = ITERABLE_TYPES
         else:
+            left_hashable = False
             right_types = None
 
-        left = get_literal(node.left)
+        if left_hashable:
+            left = get_constant(node.left)
+        else:
+            left = get_literal(node.left)
         if left is UNSET:
             return
         right = get_literal(node.comparators[0], types=right_types)
@@ -377,7 +384,8 @@ class ConstantFolding(OptimizerStep):
         if not isinstance(seq_ast, (ast.Set, ast.List)):
             return
 
-        seq = get_literal(seq_ast)
+        # elements must be hashable
+        seq = get_literal(seq_ast, constant_items=True)
         if seq is UNSET:
             return
 
