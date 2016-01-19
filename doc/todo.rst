@@ -42,6 +42,19 @@ still not a JIT compiler.  A JIT compiler is required to implement even more
 optimizations.
 
 
+Search ideas of new optimizations
+=================================
+
+* `python.org wiki: PythonSpeed/PerformanceTips
+  <https://wiki.python.org/moin/PythonSpeed/PerformanceTips>`_
+* `Open issues of type Performance
+  <http://bugs.python.org/issue?%40search_text=&ignore=file%3Acontent&title=&%40columns=title&id=&%40columns=id&stage=&creation=&creator=&activity=&%40columns=activity&%40sort=activity&actor=&nosy=&type=7&components=&versions=&dependencies=&assignee=&keywords=&priority=&status=1&%40columns=status&resolution=&nosy_count=&message_count=&%40group=&%40pagesize=50&%40startwith=0&%40sortdir=on&%40queryname=&%40old-queryname=&%40action=search>`_
+* `Closed issues of type Performance
+  <http://bugs.python.org/issue?%40search_text=&ignore=file%3Acontent&title=&%40columns=title&id=&%40columns=id&stage=&creation=&creator=&activity=&%40columns=activity&%40sort=activity&actor=&nosy=&type=7&components=&versions=&dependencies=&assignee=&keywords=&priority=&status=2&%40columns=status&resolution=&nosy_count=&message_count=&%40group=&%40pagesize=50&%40startwith=0&%40sortdir=on&%40queryname=&%40old-queryname=&%40action=search>`_
+* `Unladen Swallow ProjectPlan
+  <http://code.google.com/p/unladen-swallow/wiki/ProjectPlan>`_
+* Ideas from PyPy, Pyston, Numba, etc.
+
 
 Major Bugs
 ==========
