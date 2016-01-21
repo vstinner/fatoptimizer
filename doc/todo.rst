@@ -4,18 +4,6 @@
 fatoptimizer TODO list
 ++++++++++++++++++++++
 
-TODO
-====
-
-* PEP 511: extract ast.Constant patch
-
-  * compile: don't merge "equal but different" constants like 0 (int) and 0.0
-    (float)
-  * marshal: use the empty frozenset singleton
-  * add ast.Constant
-  * fixes for docstrings
-
-
 Goal
 ====
 
@@ -40,6 +28,12 @@ still not a JIT compiler.  A JIT compiler is required to implement even more
 optimizations.
 
 
+Known Bugs
+==========
+
+* ``import *`` is ignored
+
+
 Search ideas of new optimizations
 =================================
 
@@ -52,26 +46,6 @@ Search ideas of new optimizations
 * `Unladen Swallow ProjectPlan
   <http://code.google.com/p/unladen-swallow/wiki/ProjectPlan>`_
 * Ideas from PyPy, Pyston, Numba, etc.
-
-
-Major Bugs
-==========
-
-* ``import *`` is ignored
-
-
-Minor Bugs
-==========
-
-* test_extended_arg() and test_compiler_recursion_limit() of test_compile fails
-  with RecursionError in FAT Python mode
-
-* Issue with 'copy builtins to constants' optimization and builtins modified in
-  the middle of the function:
-
-  - test_dynamic
-  - Lib/unittest/test/testmock/testwith.py currently uses:
-    __fatoptimizer__ = {'copy_builtin_to_constant': False}
 
 
 Needed to merge FAT mode into CPython
