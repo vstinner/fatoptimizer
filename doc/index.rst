@@ -35,5 +35,6 @@ Table Of Contents
    fat
    optimizations
    benchmarks
+   microbenchmarks
    misc
    todo

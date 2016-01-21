@@ -13,12 +13,12 @@ def bench(stmt, *, setup='', repeat=10**5, number=10):
 
 
 def format_dt(dt, sign=False):
-    if dt > 10e-3:
+    if abs(dt) > 10e-3:
         if sign:
             return "%+.1f ms" % (dt*1e3)
         else:
             return "%.1f ms" % (dt*1e3)
-    elif dt > 10e-6:
+    elif abs(dt) > 10e-6:
         if sign:
             return "%+.1f us" % (dt*1e6)
         else:

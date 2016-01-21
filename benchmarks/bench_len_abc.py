@@ -16,17 +16,19 @@ if fat.get_specialized(func):
 
 def func_cst():
     return 3
-func_cst.__code__ = fat.replace_consts(func_cst.__code__, {'LEN': len})
 
-dt = bench('func()')
-print("original bytecode (call len): %s" % format_dt(dt))
+def run_benchmark(bench):
+    bench.timeit('func()',
+                 globals=globals(),
+                 name="original bytecode (call len)")
 
-dt2 = bench('func_cst()')
-print("return 3: %s" % compared_dt(dt2, dt))
+    bench.timeit('func_cst()',
+                 globals=globals(),
+                 name="return 3")
 
-fat.specialize(func, func_cst, [fat.GuardBuiltins(('dict',))])
-assert fat.get_specialized(func)
-dt3 = bench('func()')
-print("specialized (return 3): %s" % compared_dt(dt3, dt))
+    fat.specialize(func, func_cst, [fat.GuardBuiltins(('len',))])
+    assert fat.get_specialized(func)
 
-print("cost of GuardBuiltins: %s" % format_dt(dt3 - dt2, sign=True))
+    bench.timeit('func()',
+                 globals=globals(),
+                 name="return 3 with guard on builtins")
