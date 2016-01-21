@@ -2,23 +2,32 @@
 Tools used by microbenchmarks.
 """
 
+import sys
 import timeit
 
 
-def bench(func, *, stmt='func()', setup='', repeat=10**5, number=10):
-    timer = timeit.Timer(stmt,
-                         setup=setup,
-                         globals={'func': func})
+def bench(stmt, *, setup='', repeat=10**5, number=10):
+    caller_globals = sys._getframe(1).f_globals
+    timer = timeit.Timer(stmt, setup=setup, globals=caller_globals)
     return min(timer.repeat(repeat=repeat, number=number)) / number
 
 
-def format_dt(dt):
+def format_dt(dt, sign=False):
     if dt > 10e-3:
-        return "%.1f ms" % (dt*1e3)
+        if sign:
+            return "%+.1f ms" % (dt*1e3)
+        else:
+            return "%.1f ms" % (dt*1e3)
     elif dt > 10e-6:
-        return "%.1f us" % (dt*1e6)
+        if sign:
+            return "%+.1f us" % (dt*1e6)
+        else:
+            return "%.1f us" % (dt*1e6)
     else:
-        return "%.0f ns" % (dt*1e9)
+        if sign:
+            return "%+.0f ns" % (dt*1e9)
+        else:
+            return "%.0f ns" % (dt*1e9)
 
 
 def compared_dt(specialized_dt, original_dt):
@@ -28,5 +37,7 @@ def compared_dt(specialized_dt, original_dt):
         what = 'faster :-)'
     else:
         what = 'slower :-('
-    return ('%s (%+.1f%%, %.1fx %s)'
-            % (format_dt(specialized_dt), percent, ratio, what))
+    return ('%s (%s, %+.1f%%, %.1fx %s)'
+            % (format_dt(specialized_dt),
+               format_dt(specialized_dt - original_dt, sign=True),
+               percent, ratio, what))
