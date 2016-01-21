@@ -1,5 +1,5 @@
 """
-Microbenchmark on the "copy builtin to constant".
+Microbenchmark on "copy global function to constant".
 
 The benchmark doesn't use fatoptimize, but specialize explicitly the function.
 """
@@ -33,5 +33,5 @@ def run_benchmark(bench):
 
     bench.timeit(stmt='func("abc")',
                  globals=globals(),
-                 name='LOAD_CONST with guard')
+                 name='LOAD_CONST with guard on globals')
 
