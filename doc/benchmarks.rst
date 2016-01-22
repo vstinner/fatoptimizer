@@ -14,6 +14,86 @@ The Grand Unified Python Benchmark Suite
 
 Project hosted at https://hg.python.org/benchmarks
 
+2016-01-22, don't specialized nested functions anymore::
+
+    $ time python3 ../benchmarks/perf.py ../default/python ../fatpython/python 2>&1|tee log
+    INFO:root:Automatically selected timer: perf_counter
+    INFO:root:Running `../fatpython/python ../benchmarks/lib3/2to3/2to3 -f all ../benchmarks/lib/2to3`
+    INFO:root:Running `../fatpython/python ../benchmarks/lib3/2to3/2to3 -f all ../benchmarks/lib/2to3` 1 time
+    INFO:root:Running `../default/python ../benchmarks/lib3/2to3/2to3 -f all ../benchmarks/lib/2to3`
+    INFO:root:Running `../default/python ../benchmarks/lib3/2to3/2to3 -f all ../benchmarks/lib/2to3` 1 time
+    INFO:root:Running `../fatpython/python ../benchmarks/performance/bm_chameleon_v2.py -n 50 --timer perf_counter`
+    INFO:root:Running `../default/python ../benchmarks/performance/bm_chameleon_v2.py -n 50 --timer perf_counter`
+    INFO:root:Running `../fatpython/python ../benchmarks/performance/bm_django_v3.py -n 50 --timer perf_counter`
+    INFO:root:Running `../default/python ../benchmarks/performance/bm_django_v3.py -n 50 --timer perf_counter`
+    INFO:root:Running `../fatpython/python ../benchmarks/performance/bm_pickle.py -n 50 --timer perf_counter --use_cpickle pickle`
+    INFO:root:Running `../default/python ../benchmarks/performance/bm_pickle.py -n 50 --timer perf_counter --use_cpickle pickle`
+    INFO:root:Running `../fatpython/python ../benchmarks/performance/bm_pickle.py -n 50 --timer perf_counter --use_cpickle unpickle`
+    INFO:root:Running `../default/python ../benchmarks/performance/bm_pickle.py -n 50 --timer perf_counter --use_cpickle unpickle`
+    INFO:root:Running `../fatpython/python ../benchmarks/performance/bm_json_v2.py -n 50 --timer perf_counter`
+    INFO:root:Running `../default/python ../benchmarks/performance/bm_json_v2.py -n 50 --timer perf_counter`
+    INFO:root:Running `../fatpython/python ../benchmarks/performance/bm_json.py -n 50 --timer perf_counter json_load`
+    INFO:root:Running `../default/python ../benchmarks/performance/bm_json.py -n 50 --timer perf_counter json_load`
+    INFO:root:Running `../fatpython/python ../benchmarks/performance/bm_nbody.py -n 50 --timer perf_counter`
+    INFO:root:Running `../default/python ../benchmarks/performance/bm_nbody.py -n 50 --timer perf_counter`
+    INFO:root:Running `../fatpython/python ../benchmarks/performance/bm_regex_v8.py -n 50 --timer perf_counter`
+    INFO:root:Running `../default/python ../benchmarks/performance/bm_regex_v8.py -n 50 --timer perf_counter`
+    INFO:root:Running `../fatpython/python ../benchmarks/performance/bm_tornado_http.py -n 100 --timer perf_counter`
+    INFO:root:Running `../default/python ../benchmarks/performance/bm_tornado_http.py -n 100 --timer perf_counter`
+    [ 1/10] 2to3...
+    [ 2/10] chameleon_v2...
+    [ 3/10] django_v3...
+    [ 4/10] fastpickle...
+    [ 5/10] fastunpickle...
+    [ 6/10] json_dump_v2...
+    [ 7/10] json_load...
+    [ 8/10] nbody...
+    [ 9/10] regex_v8...
+    [10/10] tornado_http...
+
+    Report on Linux smithers 4.2.8-300.fc23.x86_64 #1 SMP Tue Dec 15 16:49:06 UTC 2015 x86_64 x86_64
+    Total CPU cores: 8
+
+    ### 2to3 ###
+    7.232935 -> 7.078553: 1.02x faster
+
+    ### chameleon_v2 ###
+    Min: 5.740738 -> 5.642322: 1.02x faster
+    Avg: 5.805132 -> 5.669008: 1.02x faster
+    Significant (t=5.61)
+    Stddev: 0.17073 -> 0.01766: 9.6699x smaller
+
+    ### fastpickle ###
+    Min: 0.448408 -> 0.454956: 1.01x slower
+    Avg: 0.450220 -> 0.469483: 1.04x slower
+    Significant (t=-8.28)
+    Stddev: 0.00364 -> 0.01605: 4.4102x larger
+
+    ### fastunpickle ###
+    Min: 0.546227 -> 0.582611: 1.07x slower
+    Avg: 0.554405 -> 0.602790: 1.09x slower
+    Significant (t=-6.05)
+    Stddev: 0.01496 -> 0.05453: 3.6461x larger
+
+    ### regex_v8 ###
+    Min: 0.042338 -> 0.043736: 1.03x slower
+    Avg: 0.042663 -> 0.044073: 1.03x slower
+    Significant (t=-4.09)
+    Stddev: 0.00173 -> 0.00172: 1.0021x smaller
+
+    ### tornado_http ###
+    Min: 0.260895 -> 0.274085: 1.05x slower
+    Avg: 0.265663 -> 0.277511: 1.04x slower
+    Significant (t=-11.26)
+    Stddev: 0.00988 -> 0.00360: 2.7464x smaller
+
+    The following not significant results are hidden, use -v to show them:
+    django_v3, json_dump_v2, json_load, nbody.
+
+    real	20m7.994s
+    user	19m44.016s
+    sys	0m22.894s
+
 2016-01-21::
 
     $ time python3 ../benchmarks/perf.py ../default/python ../fatpython/python
