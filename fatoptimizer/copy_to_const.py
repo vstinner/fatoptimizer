@@ -36,3 +36,4 @@ class CopyBuiltinToConstantStep(OptimizerStep):
         unique_constant = self.new_str_constant('LOAD_GLOBAL %s' % func)
         copy_global = CopyBuiltinToConstant(func, unique_constant)
         self.copy_builtin_to_constants[func] = copy_global
+        self.log(node, "copy %s builtin to constants", func)
