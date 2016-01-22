@@ -2714,16 +2714,13 @@ class SimplifyIterableTests(BaseAstTests):
         ''')
 
     def test_replace_with_empty_tuple(self):
-        for empty_iterable in (
-            '{}',
-            '[]',
-            # "" and b"" are replaced with () to simplify UnrollStep,
-            # is it worth? UnrollStep can use get_constant() ITERABLE
-            '""',
-            'b""',
-        ):
-            self.check_optimize('for x in %s: pass' % empty_iterable,
-                                'for x in (): pass')
+        # empty list
+        self.check_optimize('for x in []: pass',
+                            'for x in (): pass')
+
+        # empty dict
+        self.check_optimize('for x in {}: pass',
+                            'for x in (): pass')
 
         # need a guard on set() builtin
         self.check_dont_optimize('for x in set(): pass')
@@ -2739,6 +2736,10 @@ class SimplifyIterableTests(BaseAstTests):
                                     iter=ast.Constant(frozenset((1, 2, 3))),
                                     body=[ast.Pass()],
                                     orelse=[]))
+
+        # don't optimize if items are not constants
+        self.check_dont_optimize('for x in [1, x]: pass')
+        self.check_dont_optimize('for x in {1, x}: pass')
 
     def test_range(self):
         self.check_builtin_func('range', '''

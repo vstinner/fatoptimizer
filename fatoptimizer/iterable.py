@@ -30,7 +30,17 @@ class BaseSimplifyIterable(OptimizerStep):
 
 class SimplifyIterable(BaseSimplifyIterable):
     def optimize_iterable(self, node):
-        value = get_literal(node, types=ITERABLE_TYPES)
+        # it's already a constant, nothing to do
+        if isinstance(node, ast.Constant):
+            return
+
+        # remplace empty dict (create at runtime) with an empty tuple
+        # (constant)
+        if isinstance(node, ast.Dict) and not node.keys:
+            return self.new_constant(node, ())
+
+        # FIXME: optimize dict?
+        value = get_literal(node, types=(list, set), constant_items=True)
         if value is UNSET:
             return
 

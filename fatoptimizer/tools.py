@@ -105,7 +105,7 @@ def _new_constant(node, value):
         new_node = ast.Constant(value=value)
     elif isinstance(value, (tuple, frozenset)):
         if not _is_constant(value):
-            raise TypeError("container items are not constant")
+            raise TypeError("container items are not constant: %r" % (value,))
         new_node = ast.Constant(value=value)
     elif isinstance(value, list):
         elts = [_new_constant(node, elt) for elt in value]
