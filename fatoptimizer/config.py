@@ -10,6 +10,7 @@ class Config:
         constant_propagation
         copy_builtin_to_constant
         enabled
+        logger
         max_bytes_len
         max_constant_size
         max_int_bits
