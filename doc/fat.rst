@@ -63,45 +63,98 @@ Guard types
     Check the type of the nth argument, *arg_types* must be a sequence of
     types.
 
+    Attributes:
+
+    .. attribute:: arg_index
+
+       Index of the argument (``int``). Read-only attribute.
+
+    .. attribute:: arg_types
+
+       List of accepted types for the argument: list of types.
+       Read-only property.
+
     Keep a strong reference to *arg_types* types.
 
 
 .. class:: GuardBuiltins(names)
 
-   Watch for ``builtins.__dict__[name]`` and ``globals()[name]`` for all
-   *names*.
+   Subtype of :class:`GuardDict`.
+
+   Watch for:
+
+   * globals of the current frame (``frame.f_globals``)
+   * ``globals()[name]`` for all *names*.
+   * builtins of the current frame (``frame.f_builtins``)
+   * ``builtins.__dict__[name]`` for all *names*
 
    The guard initialization fails if ``builtins.__dict__[name]`` was replaced
    after ``fat`` was imported, or if ``globals()[name]`` already exists.
 
-   Keep a strong references to the builtin dictionary (``builtins.__dict__``),
-   to the dictionary of the global namespace (``globals()``), to *names* and to
-   builtins of *names* (``builtins.__dict__[name]`` for all *names*).
+   Attributes:
+
+   .. attribute:: guard_globals
+
+      The :class:`GuardGlobals` used to watch for the global variables.
+      Read-only attribute.
+
+   Keep a strong references to the builtin namespace (``builtins.__dict__``
+   dictionary), to the global namespace (``globals()`` dictionary), to *names*
+   and to existing builtin symbols called *names* (``builtins.__dict__[name]``
+   for all *names*).
 
 
 .. class:: GuardDict(dict, keys)
 
    Watch for ``dict[key]`` for all *keys*.
 
-   Keep a strong references to *dict*, to *keys* and to dictionary values
-   (``dict[key]`` for all keys).
+   Attributes:
+
+   .. attribute:: dict
+
+      Watched dictionary (``dict``). Read-only attribute.
+
+   .. attribute:: keys
+
+      List of watched dictionary keys: list of ``str``. Read-only property.
+
+   Keep a strong references to *dict*, to *keys* and to existing dictionary
+   values (``dict[key]`` for all keys).
 
 
 .. class:: GuardFunc(func)
 
-   Watch for ``func.__code__``.
+   Watch for the code object (``func.__code__``) of a Python function.
+
+   Attributes:
+
+   .. attribute:: code
+
+      Watched code object. Read-only attribute.
+
+   .. attribute:: func
+
+      Watched function. Read-only attribute.
 
    Keep a strong references to *func* and to ``func.__code__``.
 
 
+.. class:: GuardGlobals(names)
+
+   Subtype of :class:`GuardDict`.
+
+   Watch for:
+
+   * globals of the current frame (``frame.f_globals``)
+   * ``globals()[name]`` for all *names*.
+
+   Keep a strong references to the global namespace (``globals()`` dictionary),
+   to *names* and to existing global variables called *names*
+   (``globals()[name]`` for all *names*).
+
+
 Guard helper functions
 ----------------------
-
-.. function:: guard_globals(names)
-
-   Create ``GuardDict(globals), names)``: watch for ``globals()[name]`` for all
-   *names*.
-
 
 .. function:: guard_type_dict(type, attrs)
 
@@ -136,10 +189,27 @@ Type::
 Changelog
 =========
 
+* 2016-01-22: Version 0.2
+
+ * :class:`GuardBuiltins` now also checks the builtins and the globals of the
+   current frame. In practice, the guard fails if it creates in a namespace
+   and checked in a different namespace.
+ * Add a new :class:`GuardGlobals` type which replaces the previous
+   :func:`guard_globals()` helper function (removed). The guard check checks if
+   the frame globals changed or not.
+ * Guards are now tracked by the garbage collector to handle correctly a
+   reference cycle with GuardGlobals which keeps a reference to the module
+   namespace (``globals()``).
+ * Fix type of dictionary version for 32-bit platforms: ``PY_UINT64_T``, not
+   ``size_t``.
+ * Fix :class:`GuardFunc` traverse method: visit also the ``code`` attribute.
+ * Implement a traverse method to :class:`GuardBuiltins` to detect correctly
+   reference cycles.
+
 * 2016-01-18: Version 0.1
 
   * GuardBuiltins check remembers if guard init failed
-  * Rename GuardGlobals() to guard_globals()
-  * Rename GuardTypeDict() to guard_dict_type()
+  * Rename :class:`GuardGlobals` to :func:`guard_globals`
+  * Rename :class:`GuardTypeDict` to :func:`guard_dict_type`
 
 * 2016-01-13: First public release, version 0.0.
