@@ -281,6 +281,7 @@ Profiling
 Later
 =====
 
+* find a way to specialize nested functions?
 * configuration to manually help the optimizer:
 
   - give a whitelist of "constants": app.DEBUG, app.enum.BLUE, ...

@@ -49,9 +49,11 @@ class NakedOptimizer(BaseOptimizer):
             self.parent = parent
             # module is a ModuleOptimizer instance
             self.module = parent.module
+            self.funcdef_depth = parent.funcdef_depth
         else:
             self.parent = None
             self.module = self
+            self.funcdef_depth = 0
         # attributes set in optimize()
         self.root = None
         self._global_variables = set()
@@ -202,6 +204,7 @@ class FunctionOptimizer(NakedOptimizer,
         super().__init__(*args, **kw)
         if self.parent is None:
             raise ValueError("parent is not set")
+        self.funcdef_depth += 1
         self._guards = []
         # FIXME: move this to the optimizer step?
         # global name => CopyBuiltinToConstant
@@ -287,6 +290,13 @@ class FunctionOptimizer(NakedOptimizer,
         if func_node.decorator_list:
             # FIXME: support decorators
             self.log(func_node, "skip optimisation: don't support decorators")
+            return func_node
+
+        # FIXME: specialize somehow nested functions?
+        if self.funcdef_depth > 1:
+            self.log(func_node,
+                     "skip optimisation requiring specialization "
+                     "on nested function")
             return func_node
 
         new_node = super().optimize(func_node)

@@ -1121,85 +1121,87 @@ class CopyBuiltinToConstantTests(BaseAstTests):
         self.guards,
         replace_consts="{'LOAD_GLOBAL max': max}")
 
-    def test_nested_func_before(self):
-        self.config._copy_builtin_to_constant.add('int')
-        self.check_optimize("""
-            def func():
-                def func2(x):
-                    return int(x)
+    # FIXME: specialize nested function?
+    #def test_nested_func_before(self):
+    #    self.config._copy_builtin_to_constant.add('int')
+    #    self.check_optimize("""
+    #        def func():
+    #            def func2(x):
+    #                return int(x)
 
-                y = func2(4)
-                return int(y)
-        """, """
-            import fat as __fat__
+    #            y = func2(4)
+    #            return int(y)
+    #    """, """
+    #        import fat as __fat__
 
-            def func():
-                def func2(x):
-                    return int(x)
+    #        def func():
+    #            def func2(x):
+    #                return int(x)
 
-                y = func2(4)
-                return int(y)
+    #            y = func2(4)
+    #            return int(y)
 
-            _ast_optimized = func
-            def func():
-                def func2(x):
-                    return int(x)
-                _ast_optimized = func2
-                def func2(x):
-                    return 'LOAD_GLOBAL int'(x)
+    #        _ast_optimized = func
+    #        def func():
+    #            def func2(x):
+    #                return int(x)
+    #            _ast_optimized = func2
+    #            def func2(x):
+    #                return 'LOAD_GLOBAL int'(x)
 
-                func2.__code__ = __fat__.replace_consts(func2.__code__, {{'LOAD_GLOBAL int': 'LOAD_GLOBAL int#2'}})
+    #            func2.__code__ = __fat__.replace_consts(func2.__code__, {{'LOAD_GLOBAL int': 'LOAD_GLOBAL int#2'}})
 
-                __fat__.specialize(_ast_optimized, func2.__code__, {guards})
-                func2 = _ast_optimized
-                del _ast_optimized
+    #            __fat__.specialize(_ast_optimized, func2.__code__, {guards})
+    #            func2 = _ast_optimized
+    #            del _ast_optimized
 
-                y = func2(4)
-                return 'LOAD_GLOBAL int#2'(y)
+    #            y = func2(4)
+    #            return 'LOAD_GLOBAL int#2'(y)
 
-            func.__code__ = __fat__.replace_consts(func.__code__, {{'LOAD_GLOBAL int#2': int}})
-            __fat__.specialize(_ast_optimized, func.__code__, {guards})
-            func = _ast_optimized
-            del _ast_optimized
-        """.format(guards=builtin_guards('int')))
+    #        func.__code__ = __fat__.replace_consts(func.__code__, {{'LOAD_GLOBAL int#2': int}})
+    #        __fat__.specialize(_ast_optimized, func.__code__, {guards})
+    #        func = _ast_optimized
+    #        del _ast_optimized
+    #    """.format(guards=builtin_guards('int')))
 
-    def test_nested_func_after(self):
-        self.config._copy_builtin_to_constant.add('len')
-        self.check_optimize("""
-            def func(arg):
-                len(arg)
+    # FIXME: specialize nested function?
+    #def test_nested_func_after(self):
+    #    self.config._copy_builtin_to_constant.add('len')
+    #    self.check_optimize("""
+    #        def func(arg):
+    #            len(arg)
 
-                def func2(x):
-                    len(x)
-        """, """
-            import fat as __fat__
+    #            def func2(x):
+    #                len(x)
+    #    """, """
+    #        import fat as __fat__
 
-            def func(arg):
-                len(arg)
+    #        def func(arg):
+    #            len(arg)
 
-                def func2(x):
-                    len(x)
+    #            def func2(x):
+    #                len(x)
 
-            _ast_optimized = func
-            def func(arg):
-                'LOAD_GLOBAL len'(arg)
+    #        _ast_optimized = func
+    #        def func(arg):
+    #            'LOAD_GLOBAL len'(arg)
 
-                def func2(x):
-                    len(x)
-                _ast_optimized = func2
-                def func2(x):
-                    'LOAD_GLOBAL len#2'(x)
+    #            def func2(x):
+    #                len(x)
+    #            _ast_optimized = func2
+    #            def func2(x):
+    #                'LOAD_GLOBAL len#2'(x)
 
-                func2.__code__ = __fat__.replace_consts(func2.__code__, {{'LOAD_GLOBAL len#2': 'LOAD_GLOBAL len'}})
-                __fat__.specialize(_ast_optimized, func2.__code__, {guards})
-                func2 = _ast_optimized
-                del _ast_optimized
+    #            func2.__code__ = __fat__.replace_consts(func2.__code__, {{'LOAD_GLOBAL len#2': 'LOAD_GLOBAL len'}})
+    #            __fat__.specialize(_ast_optimized, func2.__code__, {guards})
+    #            func2 = _ast_optimized
+    #            del _ast_optimized
 
-            func.__code__ = __fat__.replace_consts(func.__code__, {{'LOAD_GLOBAL len': len}})
-            __fat__.specialize(_ast_optimized, func.__code__, {guards})
-            func = _ast_optimized
-            del _ast_optimized
-        """.format(guards=builtin_guards('len')))
+    #        func.__code__ = __fat__.replace_consts(func.__code__, {{'LOAD_GLOBAL len': len}})
+    #        __fat__.specialize(_ast_optimized, func.__code__, {guards})
+    #        func = _ast_optimized
+    #        del _ast_optimized
+    #    """.format(guards=builtin_guards('len')))
 
     def test_repr_global(self):
         # In func()/method(), repr() builtin cannot be copied to constant,
