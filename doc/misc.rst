@@ -109,7 +109,7 @@ Example of function with side effect::
 Changelog
 =========
 
-* Version 0.2
+* 2016-01-23: Version 0.2
 
   * Fix the function optimizer: don't specialized nested function. The
     specialization is more expensive than the speedup of optimizations.
