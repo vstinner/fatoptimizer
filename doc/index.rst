@@ -37,5 +37,6 @@ Table Of Contents
    semantics
    benchmarks
    microbenchmarks
-   misc
+   changelog
    todo
+   misc
