@@ -34,6 +34,7 @@ Table Of Contents
    fatoptimizer
    fat
    optimizations
+   semantics
    benchmarks
    microbenchmarks
    misc

@@ -95,7 +95,7 @@ Original bytecode::
     >>   17 LOAD_CONST               0 (None)
          20 RETURN_VALUE
 
-FAT Python bytecode::
+fatoptimizer bytecode::
 
     LOAD_CONST   1 ("hello")
     STORE_FAST   0 (i)
@@ -430,7 +430,7 @@ Comparison with the peephole optimizer
 The `CPython peephole optimizer
 <https://faster-cpython.readthedocs.org/bytecode.html#cpython-peephole-optimizer>`_
 only implements a few optimizations: :ref:`constant folding <const-fold>` and
-:ref:`dead code elimination <dead-code>`. FAT Python implements more
+:ref:`dead code elimination <dead-code>`. fatoptimizer implements more
 :ref:`optimizations <optim>`.
 
 The peephole optimizer doesn't support :ref:`constant propagation
