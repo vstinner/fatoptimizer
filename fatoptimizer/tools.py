@@ -172,8 +172,8 @@ def _get_literal(node, constant_items=False):
     if value is not UNSET:
         return value
 
-    if isinstance(node, ast.Tuple):
-        elts = _get_node_list(node.elts, literal=use_literal)
+    if isinstance(node, ast.Tuple) and use_literal:
+        elts = _get_node_list(node.elts, literal=True)
         if elts is UNSET:
             return UNSET
         return list(elts)
