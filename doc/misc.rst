@@ -47,35 +47,6 @@ body which uses "i". We need to rerun the optimizer on this new AST tree to run
 optimizations like constant propagation or constant folding.
 
 
-Possible optimizations
-======================
-
-Short term:
-
-* Function func2() calls func1() if func1() is pure: inline func1()
-  into func2()
-* Call builtin pure functions during compilation. Example: replace len("abc")
-  with 3 or range(3) with (0, 1, 2).
-* Constant folding: replace a variable with its value. We may do that for
-  optimal parameters with default value if these parameters are not set.
-  Example: replace app.DEBUG with False.
-
-Using types:
-
-* Detect the exact type of parameters and function local variables
-* Specialized code relying on the types. For example, move invariant out of
-  loops (ex: obj.append for list).
-* x + 0 gives a TypeError for str, but can be replaced with x for int and
-  float. Same optimization for x*0.
-* See astoptimizer for more ideas.
-
-Longer term:
-
-* Compile to machine code using Cython, Numba, PyPy, etc. Maybe only for
-  numeric types at the beginning? Release the GIL if possible, but check
-  "sometimes" if we got UNIX signals.
-
-
 Pure functions
 ==============
 
