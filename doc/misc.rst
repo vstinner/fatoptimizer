@@ -118,6 +118,7 @@ Changelog
   * Adjust usage of get_literal()
   * SimplifyIterable also replaces empty dict (created a runtime) with an empty
     tuple (constant)
+  * Update benchmark scripts and benchmark results in the documentation
 
 * 2016-01-18: Version 0.1
 

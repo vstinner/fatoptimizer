@@ -13,7 +13,7 @@
 #
 #  - git tag VERSION
 #  - git push --tags
-#  - python3 setup.py register sdist upload
+#  - python3 setup.py register sdist bdist_wheel upload
 #
 # After the release:
 #
@@ -21,7 +21,7 @@
 #  - git commit
 #  - git push
 
-VERSION = '0.2'
+VERSION = '0.3'
 
 DESCRIPTION = ('Static optimizer for Python 3.6 using function '
                'specialization with guards')
@@ -40,7 +40,10 @@ CLASSIFIERS = [
 # test_fatoptimizer.py, to ensure that VERSION is the same than
 # fatoptimizer.__version__.
 def main():
-    from distutils.core import setup
+    try:
+        from setuptools import setup
+    except ImportError:
+        from distutils.core import setup
 
     with open('README.rst') as fp:
         long_description = fp.read().strip()

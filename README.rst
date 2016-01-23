@@ -1,6 +1,6 @@
-**********
-FAT Python
-**********
+************
+fatoptimizer
+************
 
 ``fatoptimizer`` is a static optimizer for Python 3.6 using function
 specialization with guards. It is implemented as an AST optimizer.
@@ -14,6 +14,6 @@ function was specialized.
   <https://github.com/haypo/fatoptimizer>`_ (code, bug tracker)
 * `fatoptimizer project at the Python Cheeseshop (PyPI)
   <https://pypi.python.org/pypi/fatoptimizer>`_ (download releases)
-* `fat project <https://faster-cpython.readthedocs.org/fat.html>`_
+* `fat module <https://fatoptimizer.readthedocs.org/en/latest/fat.html>`_
 * `FAT Python
   <https://faster-cpython.readthedocs.org/fat_python.html#fat-python>`_

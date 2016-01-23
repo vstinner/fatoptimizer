@@ -4,7 +4,7 @@ from .optimizer import ModuleOptimizer as _ModuleOptimizer
 import sys
 
 
-__version__ = '0.2'
+__version__ = '0.3'
 
 
 def optimize(tree, filename, config):
