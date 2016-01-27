@@ -4,9 +4,11 @@
 fat module
 ++++++++++
 
-The ``fat`` module is Python extension module (written in C) implementing fast
-guards. The :ref:`fatoptimizer optimizer <fatoptimizer>` uses ``fat`` guards to
-specialize functions and only the specialize bytecode under some conditions.
+The ``fat`` module is a Python extension module (written in C) implementing
+fast guards. The :ref:`fatoptimizer optimizer <fatoptimizer>` uses ``fat``
+guards to specialize functions. ``fat`` guards are used to verify assumptions
+used to specialize the code. If an assumption is no more true, the specialized
+code is not used.
 
 The ``fat`` module is required to run code optimized by ``fatoptimizer`` if at
 least one function is specialized.
