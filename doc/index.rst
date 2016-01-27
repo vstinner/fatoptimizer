@@ -8,7 +8,7 @@ fatoptimizer
 specialization with guards. It is implemented as an AST optimizer.
 
 Optimized code requires the :ref:`fat module <fat>` at runtime if at least one
-function was specialized.
+function is specialized.
 
 Links:
 
@@ -21,8 +21,10 @@ Links:
 * `FAT Python
   <https://faster-cpython.readthedocs.org/fat_python.html>`_
 
-fatoptimizer requires a Python 3.6 patched with the PEP 511 (``ast.Constant``,
-``sys.ast_tranformers``).
+The ``fatoptimizer`` module requires a Python 3.6 patched with `PEP 510
+"Specialize functions with guards"
+<https://www.python.org/dev/peps/pep-0510/>`_ and `PEP 511 "API for code
+transformers" <https://www.python.org/dev/peps/pep-0511/>`_ patches.
 
 
 Table Of Contents

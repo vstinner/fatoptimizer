@@ -18,7 +18,10 @@ least one function is specialized.
 * `fat project at the Python Cheeseshop (PyPI)
   <https://pypi.python.org/pypi/fat>`_
 
-The ``fat`` module requires a Python 3.6 patched with PEP 510 patch.
+The ``fat`` module requires a Python 3.6 patched with `PEP 509 "Add a private
+version to dict" <https://www.python.org/dev/peps/pep-0509/>`_ and `PEP 510
+"Specialize functions with guards"
+<https://www.python.org/dev/peps/pep-0510/>`_ patches.
 
 
 fat module API
@@ -27,7 +30,7 @@ fat module API
 .. warning::
    The API is not stable yet.
 
-``fat.__version__`` is the version string.
+``fat.__version__`` is the module version string (ex: ``'0.3'``).
 
 Functions
 ---------
@@ -49,10 +52,13 @@ Functions
 
 .. function:: get_specialized(func)
 
-   Get the list of specialized codes with guards as ``(code, guards)`` tuples.
+   Get the list of specialized codes with guards. Return a list of ``(code,
+   guards)`` tuples.
 
 
-See the PEP 510 for the API of ``specialize()`` and ``get_specialized()``.
+See the `PEP 510 "Specialize functions with guards"
+<https://www.python.org/dev/peps/pep-0510/>`_ for the API of ``specialize()``
+and ``get_specialized()``.
 
 
 .. _guard:
@@ -62,8 +68,15 @@ Guard types
 
 .. class:: GuardArgType(arg_index, arg_types)
 
-    Check the type of the nth argument, *arg_types* must be a sequence of
+    Check the type of the nth argument. *arg_types* must be a sequence of
     types.
+
+    The guard check fails temporarily (returns ``1``) if the argument has a
+    different type or if the guard is checked with less than *arg_index*
+    parameters.
+
+    The guard does not support keyword parameters yet. If the guard is checked
+    with keyword parameters, it fails temporarily (returns ``1``).
 
     Attributes:
 
@@ -93,6 +106,10 @@ Guard types
    The guard initialization fails if ``builtins.__dict__[name]`` was replaced
    after ``fat`` was imported, or if ``globals()[name]`` already exists.
 
+   In addition to :class:`GuardDict` checks and
+   :attr:`GuardBuiltins.guard_globals` checks, the guard check always fails
+   (returns ``2``) if the frame builtins changed.
+
    Attributes:
 
    .. attribute:: guard_globals
@@ -109,6 +126,9 @@ Guard types
 .. class:: GuardDict(dict, keys)
 
    Watch for ``dict[key]`` for all *keys*.
+
+   The guard check always fails (returns ``2``) if at least one key of *keys*
+   was modified.
 
    Attributes:
 
@@ -128,6 +148,9 @@ Guard types
 
    Watch for the code object (``func.__code__``) of a Python function.
 
+   The guard check always fails (returns ``2``) if the function code was
+   replaced.
+
    Attributes:
 
    .. attribute:: code
@@ -144,6 +167,9 @@ Guard types
 .. class:: GuardGlobals(names)
 
    Subtype of :class:`GuardDict`.
+
+   In addition to :class:`GuardDict` checks, the guard check always fails
+   (returns ``2``) if the frame globals changed.
 
    Watch for:
 
@@ -169,7 +195,10 @@ Guard helper functions
 Installation
 ============
 
-A Python 3.6 patched with PEP 510 patch is required.
+The ``fat`` module requires a Python 3.6 patched with `PEP 509 "Add a private
+version to dict" <https://www.python.org/dev/peps/pep-0509/>`_ and `PEP 510
+"Specialize functions with guards"
+<https://www.python.org/dev/peps/pep-0510/>`_ patches.
 
 Type::
 
@@ -194,7 +223,7 @@ Changelog
 * 2016-01-22: Version 0.2
 
  * :class:`GuardBuiltins` now also checks the builtins and the globals of the
-   current frame. In practice, the guard fails if it creates in a namespace
+   current frame. In practice, the guard fails if it is created in a namespace
    and checked in a different namespace.
  * Add a new :class:`GuardGlobals` type which replaces the previous
    :func:`guard_globals()` helper function (removed). The guard check checks if

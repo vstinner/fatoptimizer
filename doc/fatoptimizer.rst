@@ -8,6 +8,7 @@ fatoptimizer API
 .. warning::
    The API is not stable yet.
 
+``fatoptimizer.__version__`` is the module version string (ex: ``'0.3'``).
 
 .. function:: optimize(tree, filename, config)
 
@@ -44,8 +45,10 @@ fatoptimizer API
 Installation
 ============
 
-fatoptimizer requires Python 3.6 patched with the PEP 511 (ast.Constant,
-sys.ast_tranformers).
+The :ref:`fatoptimizer module <fatoptimizer>` requires a Python 3.6 patched
+with `PEP 510 "Specialize functions with guards"
+<https://www.python.org/dev/peps/pep-0510/>`_ and `PEP 511 "API for code
+transformers" <https://www.python.org/dev/peps/pep-0511/>`_ patches.
 
 Type::
 
@@ -54,6 +57,9 @@ Type::
 Manual installation::
 
     python3.6 setup.py install
+
+Optimized code requires the :ref:`fat module <fat>` at runtime if at least one
+function is specialized.
 
 
 .. _config:
