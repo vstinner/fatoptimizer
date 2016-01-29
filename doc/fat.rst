@@ -92,7 +92,7 @@ Guard types
     Keep a strong reference to *arg_types* types.
 
 
-.. class:: GuardBuiltins(names)
+.. class:: GuardBuiltins(\*names)
 
    Subtype of :class:`GuardDict`.
 
@@ -123,12 +123,14 @@ Guard types
    for all *names*).
 
 
-.. class:: GuardDict(dict, keys)
+.. class:: GuardDict(dict, \*keys)
 
    Watch for ``dict[key]`` for all *keys*.
 
    The guard check always fails (returns ``2``) if at least one key of *keys*
    was modified.
+
+   *keys* strings are interned: see `sys.intern`.
 
    Attributes:
 
@@ -151,6 +153,10 @@ Guard types
    The guard check always fails (returns ``2``) if the function code was
    replaced.
 
+   ``GuardFunc(func)`` must not be used to specialize ``func``. Replacing the
+   code object of a function already removes its specialized code, no need to
+   add a guard.
+
    Attributes:
 
    .. attribute:: code
@@ -164,7 +170,7 @@ Guard types
    Keep a strong references to *func* and to ``func.__code__``.
 
 
-.. class:: GuardGlobals(names)
+.. class:: GuardGlobals(\*names)
 
    Subtype of :class:`GuardDict`.
 
@@ -219,6 +225,18 @@ Type::
 
 Changelog
 =========
+
+* Version 0.3
+
+ * Change constructors:
+
+   * ``GuardDict(dict, keys)`` becomes ``GuardDict(dict, *keys)``
+   * ``GuardBuiltins(name)`` becomes ``GuardBuiltins(*names)``
+   * ``GuardGlobals(name)`` becomes ``GuardGlobals(*names)``
+
+ * ``GuardFunc(func)`` init function now raises a :exc:`ValueError` if it is
+   used to specialize ``func``.
+ * ``GuardDict(keys)`` now interns *keys* strings.
 
 * 2016-01-22: Version 0.2
 
