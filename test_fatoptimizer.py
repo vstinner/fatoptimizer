@@ -2817,5 +2817,32 @@ class MiscTests(unittest.TestCase):
         self.assertEqual(fatoptimizer.__version__, setup.VERSION)
 
 
+class CallPureMethodTests(BaseAstTests):
+    def setUp(self):
+        super().setUp()
+        from fatoptimizer.methods import add_pure_methods
+        add_pure_methods(self.config)
+
+    def test_bytes(self):
+        self.check_optimize(r'b"abc".decode()',
+                            r'"abc"')
+        self.check_optimize(r'b"abc".decode("ascii")',
+                            r'"abc"')
+        self.check_optimize(r'b"ab\xff".decode("ascii", "replace")',
+                            r'"ab\ufffd"')
+
+        self.check_dont_optimize(r'b"ab\xff".decode("ascii")')
+
+    def test_str(self):
+        self.check_optimize(r'"abc".encode()',
+                            'b"abc"')
+        self.check_optimize(r'"abc".encode("ascii")',
+                            r'b"abc"')
+        self.check_optimize(r'"ab\xff".encode("ascii", "replace")',
+                            r'b"ab?"')
+
+        self.check_dont_optimize(r'"ab\xff".encode("ascii")')
+
+
 if __name__ == "__main__":
     unittest.main()

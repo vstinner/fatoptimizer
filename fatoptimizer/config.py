@@ -48,11 +48,13 @@ class Config:
         # preliminary check: max_constant_size still applies for sequences.
         self.max_seq_len = self.max_constant_size // 4
 
-        # Builtin functions (_PureBuiltin instances) which have no side effect
-        # and so can be called during the compilation
+        # Methods of builtin types which have no side effect.
+        #
+        # Mapping: type => method_mapping
+        # where method_mapping is a mapping: name => PureFunction
         self._pure_methods = {}
 
-        # Builtin functions (_PureBuiltin instances) which have no side effect
+        # Builtin functions (PureFunction instances) which have no side effect
         # and so can be called during the compilation
         self._pure_builtins = {}
 

@@ -6,7 +6,7 @@ from .specialized import BuiltinGuard
 
 class CallPureBuiltin(OptimizerStep):
     def call_builtin(self, node, pure_func):
-        value = pure_func.call(node)
+        value = pure_func.call_func(node)
         if value is UNSET:
             return
 

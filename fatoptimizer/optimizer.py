@@ -17,6 +17,7 @@ from .bltin_const import ReplaceBuiltinConstant
 from .convert_const import ConvertConstant
 from .dead_code import RemoveDeadCode, remove_dead_code
 from .iterable import SimplifyIterable, SimplifyIterableSpecialize
+from .call_method import CallPureMethods
 
 
 def add_import(tree, name, asname):
@@ -177,6 +178,7 @@ class NakedOptimizer(BaseOptimizer):
 class Optimizer(NakedOptimizer,
                 NamespaceStep,
                 ReplaceBuiltinConstant,
+                CallPureMethods,
                 UnrollStep,
                 ConstantPropagation,
                 SimplifyIterable,

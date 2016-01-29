@@ -58,7 +58,7 @@ class PureFunction:
             values.append(value)
         return values
 
-    def call(self, node):
+    def _call(self, obj, node):
         args = self.get_args(node)
         if args is None:
             return UNSET
@@ -67,7 +67,10 @@ class PureFunction:
             return UNSET
 
         try:
-            result = self.func(*args)
+            if obj is not UNSET:
+                result = self.func(obj, *args)
+            else:
+                result = self.func(*args)
         except Exception as exc:
             if (self.exceptions is not None
                and isinstance(exc, self.exceptions)):
@@ -76,3 +79,9 @@ class PureFunction:
                 raise
 
         return result
+
+    def call_func(self, node):
+        return self._call(UNSET, node)
+
+    def call_method(self, obj, node):
+        return self._call(obj, node)

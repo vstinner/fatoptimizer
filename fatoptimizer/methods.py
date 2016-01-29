@@ -9,5 +9,5 @@ def add_pure_methods(config):
         pure = PureFunction(func, name, *args, **kw)
         config._pure_methods[obj_type][name] = pure
 
-    add(bytes, 'decode', (0, 2), str, str)
-    add(str, 'encode', (0, 2), str, str)
+    add(bytes, 'decode', (0, 2), str, str, exceptions=UnicodeDecodeError)
+    add(str, 'encode', (0, 2), str, str, exceptions=UnicodeEncodeError)
