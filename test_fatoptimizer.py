@@ -2823,7 +2823,8 @@ class CallPureMethodTests(BaseAstTests):
         from fatoptimizer.methods import add_pure_methods
         add_pure_methods(self.config)
 
-    def test_bytes(self):
+    def test_bytes_decode(self):
+        # test number of arguments
         self.check_optimize(r'b"abc".decode()',
                             r'"abc"')
         self.check_optimize(r'b"abc".decode("ascii")',
@@ -2831,9 +2832,23 @@ class CallPureMethodTests(BaseAstTests):
         self.check_optimize(r'b"ab\xff".decode("ascii", "replace")',
                             r'"ab\ufffd"')
 
+        # test encoding aliases
+        self.check_optimize(r'b"abc".decode("ASCII")',
+                            r'"abc"')
+        self.check_optimize(r'b"abc".decode("latin1")',
+                            r'"abc"')
+        self.check_optimize(r'b"abc".decode("utf8")',
+                            r'"abc"')
+
+        # test decode error
         self.check_dont_optimize(r'b"ab\xff".decode("ascii")')
 
-    def test_str(self):
+        # unsupported encoding/errors
+        self.check_dont_optimize(r'b"ab\xff".decode("big5")')
+        self.check_dont_optimize(r'b"ab\xff".decode("ascii", "surrogateescape")')
+
+    def test_str_encode(self):
+        # test number of arguments
         self.check_optimize(r'"abc".encode()',
                             'b"abc"')
         self.check_optimize(r'"abc".encode("ascii")',
@@ -2841,7 +2856,12 @@ class CallPureMethodTests(BaseAstTests):
         self.check_optimize(r'"ab\xff".encode("ascii", "replace")',
                             r'b"ab?"')
 
+        # test encode error
         self.check_dont_optimize(r'"ab\xff".encode("ascii")')
+
+        # unsupported encoding/errors
+        self.check_dont_optimize(r'"ab\xff".encode("big5")')
+        self.check_dont_optimize(r'"ab\xff".encode("ascii", "backslashreplace")')
 
 
 if __name__ == "__main__":
