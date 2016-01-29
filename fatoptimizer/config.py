@@ -4,8 +4,10 @@ from .tools import get_constant_size, ITERABLE_TYPES
 
 
 class Config:
+    # FIXME: use dir()?
     _attributes = '''
         _pure_builtins
+        _pure_methods
         constant_folding
         constant_propagation
         copy_builtin_to_constant
@@ -48,6 +50,10 @@ class Config:
 
         # Builtin functions (_PureBuiltin instances) which have no side effect
         # and so can be called during the compilation
+        self._pure_methods = {}
+
+        # Builtin functions (_PureBuiltin instances) which have no side effect
+        # and so can be called during the compilation
         self._pure_builtins = {}
 
         # copy a global variable to a local variable, optimized used to load
@@ -83,6 +89,9 @@ class Config:
             from .builtins import add_pure_builtins
             add_pure_builtins(self)
 
+            from .methods import add_pure_methods
+            add_pure_methods(self)
+
     def replace(self, config):
         new_config = Config(_optimize=False)
         for attr in self._attributes:
@@ -100,6 +109,7 @@ class Config:
         self.max_str_len = self.max_constant_size
         self.max_seq_len = self.max_constant_size // 4
         self._pure_builtins = {}
+        self._pure_methods = {}
         self.copy_builtin_to_constant = False
         self._copy_builtin_to_constant = set()
         self.unroll_loops = 0

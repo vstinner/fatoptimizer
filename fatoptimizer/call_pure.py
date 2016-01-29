@@ -5,32 +5,8 @@ from .specialized import BuiltinGuard
 
 
 class CallPureBuiltin(OptimizerStep):
-    def _get_call_args(self, pure_func, node):
-        if node.keywords:
-            # FIXME: support keywords
-            return
-
-        if not pure_func.check_nargs(len(node.args)):
-            return
-
-        values = []
-        for index, node_arg in enumerate(node.args):
-            try:
-                arg_type = pure_func.arg_types[index]
-            except IndexError:
-                arg_type = None
-            value = get_literal(node_arg, types=arg_type)
-            if value is UNSET:
-                return
-            values.append(value)
-        return values
-
-    def _call_builtin(self, node, pure_func):
-        args = self._get_call_args(pure_func, node)
-        if args is None:
-            return
-
-        value = pure_func.call(args)
+    def call_builtin(self, node, pure_func):
+        value = pure_func.call(node)
         if value is UNSET:
             return
 
@@ -50,6 +26,6 @@ class CallPureBuiltin(OptimizerStep):
            and func.id in self.config._pure_builtins
            and self.is_builtin_variable(func.id)):
             pure_func = self.config._pure_builtins[func.id]
-            new_node = self._call_builtin(node, pure_func)
+            new_node = self.call_builtin(node, pure_func)
             if new_node is not None:
                 return new_node

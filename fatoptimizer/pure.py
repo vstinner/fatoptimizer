@@ -1,4 +1,4 @@
-from .tools import UNSET
+from .tools import UNSET, get_literal
 
 
 class PureFunction:
@@ -38,7 +38,31 @@ class PureFunction:
                 return False
         return True
 
-    def call(self, args):
+    def get_args(self, node):
+        if node.keywords:
+            # FIXME: support keywords
+            return
+
+        if not self.check_nargs(len(node.args)):
+            return
+
+        values = []
+        for index, node_arg in enumerate(node.args):
+            try:
+                arg_type = self.arg_types[index]
+            except IndexError:
+                arg_type = None
+            value = get_literal(node_arg, types=arg_type)
+            if value is UNSET:
+                return
+            values.append(value)
+        return values
+
+    def call(self, node):
+        args = self.get_args(node)
+        if args is None:
+            return UNSET
+
         if not self._check_args(args):
             return UNSET
 
