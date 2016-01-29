@@ -4,59 +4,7 @@ import functools
 from .tools import (UNSET,
     FLOAT_TYPES, COMPLEX_TYPES, STR_TYPES, ITERABLE_TYPES)
 from .const_fold import check_pow
-
-
-class _PureBuiltin:
-    def __init__(self, name, narg, *arg_types, check_args=None, exceptions=None):
-        self.name = name
-        if isinstance(narg, tuple):
-            self.min_narg, self.max_narg = narg
-            if self.min_narg is None:
-                raise ValueError("minimum number of parameters is None")
-        elif isinstance(narg, int):
-            self.min_narg = narg
-            self.max_narg = narg
-        else:
-            raise TypeError("narg must be tuple or int, got %s"
-                            % type(narg).__name__)
-        self.arg_types = arg_types
-        if len(self.arg_types) < self.min_narg:
-            raise ValueError("not enough argument types")
-        if self.max_narg is not None and len(self.arg_types) > self.max_narg:
-            raise ValueError("too many argument types")
-        self._check_args_cb = check_args
-        self.exceptions = exceptions
-
-    def check_nargs(self, nargs):
-        if self.min_narg is not None and self.min_narg > nargs:
-            return False
-        if self.max_narg is not None and self.max_narg < nargs:
-            return False
-        return True
-
-    def _check_args(self, args):
-        if not self.check_nargs(len(args)):
-            return False
-        if self._check_args_cb is not None:
-            if not self._check_args_cb(args):
-                return False
-        return True
-
-    def call(self, args):
-        if not self._check_args(args):
-            return UNSET
-
-        func = getattr(builtins, self.name)
-        try:
-            result = func(*args)
-        except Exception as exc:
-            if (self.exceptions is not None
-               and isinstance(exc, self.exceptions)):
-                result = UNSET
-            else:
-                raise
-
-        return result
+from .pure import PureFunction
 
 
 def _chr_check_args(args):
@@ -97,9 +45,10 @@ def _pow_check_args(config, args):
 
 
 def add_pure_builtins(config):
-    def add(*args, **kw):
-        func = _PureBuiltin(*args, **kw)
-        config._pure_builtins[func.name] = func
+    def add(name, *args, **kw):
+        func = getattr(builtins, name)
+        pure_func = PureFunction(func, name, *args, **kw)
+        config._pure_builtins[name] = pure_func
 
     ANY_TYPE = None
 
