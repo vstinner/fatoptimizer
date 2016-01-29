@@ -158,7 +158,7 @@ Easy to implement.
 * Call methods of builtin types if the object and arguments are constants.
   Example: ``"h\\xe9ho".encode("utf-8")`` replaced ``with b"h\\xc3\\xa9ho"``.
 
-* Optimize fullvisit_AsyncFunctionDef
+* Specialize also AsyncFunctionDef (run stage 2, not only stage 1)
 
 
 Can be done later
@@ -169,7 +169,7 @@ Unknown speedup, easy to medium to implement.
 * Replace dict(...) with {...} (dict literal):
   https://doughellmann.com/blog/2012/11/12/the-performance-impact-of-using-dict-instead-of-in-cpython-2-7-2/
 
-* Use SimplifyIterable for dict/frozenset argument
+* Use SimplifyIterable on dict/frozenset argument
 
 * print(): convert arguments to strings
 
@@ -182,6 +182,8 @@ Unknown speedup, easy to medium to implement.
 
   - for x in "abc": ... => for x in ("a", "b", "c"): ...
     Is it faster? Does it use less memory?
+
+  - at least, loop unrolling must work on "for x in 'abc': ..."
 
 
 Can be done later and are complex
@@ -211,6 +213,10 @@ Unknown speedup, complex to implement.
   It's not easy to inject the func.specialize() call,
   func.__code__.replace_consts() call, etc. Maybe only optimize in some
   specific cases?
+
+  Specialization of nested function was disabled because the cost to
+  specialize the function can be higher than the speedup if the function
+  is called once and then destroyed.
 
 * Enable copy builtins to constants when we know that builtins and globals are
   not modified. Need to ensure that the function is pure and only calls pure
