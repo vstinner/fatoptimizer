@@ -74,8 +74,8 @@ def specialize_constant(node, value):
 
 
 def builtin_guards(*names):
-    arg = tuple(sorted(names))
-    return '[__fat__.GuardBuiltins(%s)]' % (arg,)
+    args = ', '.join(map(repr, sorted(names)))
+    return '[__fat__.GuardBuiltins(%s)]' % (args,)
 
 
 class SpecializeConstant(ast.NodeTransformer):

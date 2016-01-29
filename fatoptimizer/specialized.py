@@ -18,8 +18,8 @@ class BuiltinGuard:
         func = ast.Attribute(value=name, attr='GuardBuiltins', ctx=ast.Load())
         copy_lineno(node, func)
 
-        names = _new_constant(node, tuple(sorted(self.names)))
-        call = Call(func=func, args=[names], keywords=[])
+        names = [_new_constant(node, name) for name in sorted(self.names)]
+        call = Call(func=func, args=names, keywords=[])
         copy_lineno(node, call)
         return call
 

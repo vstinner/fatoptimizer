@@ -5,6 +5,10 @@ Changelog
 fatoptimizer changelog
 ======================
 
+* Version 0.3
+
+  * Update for fat API version 0.3, GuardBuiltins constructor changed.
+
 * 2016-01-23: Version 0.2
 
   * Fix the function optimizer: don't specialized nested function. The
