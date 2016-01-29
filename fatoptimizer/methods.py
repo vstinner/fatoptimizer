@@ -35,6 +35,23 @@ def add_pure_methods(config):
     add(bytes, 'decode', (0, 2), str, str,
         check_args=check_encoding,
         exceptions=UnicodeDecodeError)
+    # FIXME: add more bytes methods
+
+    # FIXME: add config option since IEEE 754 can be funny on some corner
+    # cases?
+    add(float, 'as_integer_ratio', 0)
+    add(float, 'is_integer', 0)
+    add(float, 'hex', 0)
+
+    # FIXME: frozenset:
+    # 'copy', 'difference', 'intersection', 'union', 'symmetric_difference',
+    #  'isdisjoint', 'issubset', 'issuperset',
+
+    add(int, 'bit_length', 0)
+
     add(str, 'encode', (0, 2), str, str,
         check_args=check_encoding,
         exceptions=UnicodeEncodeError)
+    # FIXME: add more str methods
+
+    # FIXME: tuple: count, index

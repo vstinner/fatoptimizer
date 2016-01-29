@@ -2847,6 +2847,14 @@ class CallPureMethodTests(BaseAstTests):
         self.check_dont_optimize(r'b"ab\xff".decode("big5")')
         self.check_dont_optimize(r'b"ab\xff".decode("ascii", "surrogateescape")')
 
+    def test_float(self):
+        self.check_optimize(r'(5.0).is_integer()', 'True')
+        self.check_optimize(r'(1.5).as_integer_ratio()', '(3, 2)')
+        self.check_optimize(r'(1.5).hex()', '"0x1.8000000000000p+0"')
+
+    def test_int(self):
+        self.check_optimize(r'(1023).bit_length()', '10')
+
     def test_str_encode(self):
         # test number of arguments
         self.check_optimize(r'"abc".encode()',

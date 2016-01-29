@@ -4,6 +4,14 @@
 fatoptimizer TODO list
 ++++++++++++++++++++++
 
+
+Easy issues, for new contributors
+=================================
+
+* Complete fatoptimizer/methods.py to suppore more pure methods
+* Complete fatoptimizer/builtins.py to suppore more pure builtin functions
+
+
 Goal
 ====
 
@@ -18,10 +26,6 @@ implemented:
 * Copy constant global variable to function globals
 * Specialization for argument types: move invariant out of loops.
   Ex: create a bounded method "obj_append = obj.append" out of the loop.
-
-Other ideas of optimizations:
-
-* Call pure methods of constants, ex: " hello ".strip()
 
 Even if many optimizations can be implemented with a static optimizers, it's
 still not a JIT compiler.  A JIT compiler is required to implement even more
