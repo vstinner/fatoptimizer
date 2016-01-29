@@ -36,6 +36,8 @@ Known Bugs
 ==========
 
 * ``import *`` is ignored
+* Usage of locals() or vars() must disable optimization. Maybe only when the
+  optimizer produces new variables?
 
 
 Search ideas of new optimizations
@@ -50,35 +52,6 @@ Search ideas of new optimizations
 * `Unladen Swallow ProjectPlan
   <http://code.google.com/p/unladen-swallow/wiki/ProjectPlan>`_
 * Ideas from PyPy, Pyston, Numba, etc.
-
-
-Needed to merge FAT mode into CPython
-=====================================
-
-Short term
-----------
-
-* implement keywords in function calls
-
-
-Later
------
-
-* implement func.__sizeof__ and update test_sys
-* Cleanup Lib/test/test_fat.py, especially Lib/test/fattester.py. Remove
-  duplicated tests.
-* handle python modules and python imports
-
-  - checksum of the .py content?
-  - how to handle C extensions? checksum of the .so file?
-  - how to handle .pyc files?
-
-* efficient optimizations on objects, not only simple functions
-* need feedback from pythran, numba and others to check if the FAT mode has
-  required features to be usable (useful) by these projects
-* write unit tests for sys.asthook
-* Usage of locals() or vars() must disable optimization. Maybe only when the
-  optimizer produces new variables?
 
 
 More optimizations
@@ -111,18 +84,21 @@ More complex to implement (without breaking Python semantics).
   Maybe only for simple types (int, str). It changes object lifetime:
   https://bugs.python.org/issue2181#msg63090
 
-* Compute if a function is pure. See pythran.analysis.PureFunctions of pythran
-  project, depend on ArgumentEffects and GlobalEffects analysys
-
-* Inline calls to short pure functions: see `Issue #10399
-  <http://bugs.python.org/issue10399>`_, AST Optimization: inlining of function
-  calls
+* Function inlining: see `Issue #10399 <http://bugs.python.org/issue10399>`_,
+  AST Optimization: inlining of function calls
 
 * Inline calls to all functions, short or not? Need guards on these functions
   and the global namespace. Example: posixpath._get_sep().
 
 * Call pure functions of math, struct and string modules.
   Example: replace math.log(32) / math.log(2) with 5.0.
+
+
+Pure functions
+--------------
+
+* Compute if a function is pure. See pythran.analysis.PureFunctions of pythran
+  project, depend on ArgumentEffects and GlobalEffects analysys
 
 
 Random
@@ -159,9 +135,6 @@ Easy to implement.
   * replace '(a and b) and c' (2 op) with 'a and b and c' (1 op),
     same for "or" operator
 
-* Call methods of builtin types if the object and arguments are constants.
-  Example: ``"h\\xe9ho".encode("utf-8")`` replaced ``with b"h\\xc3\\xa9ho"``.
-
 * Specialize also AsyncFunctionDef (run stage 2, not only stage 1)
 
 
@@ -194,6 +167,8 @@ Can be done later and are complex
 ---------------------------------
 
 Unknown speedup, complex to implement.
+
+* Remove "if 0: yield" but tag FunctionDef as a generator?
 
 * Implement CALL_METHOD bytecode, but execute the following code correctly
   (output must be 1, 2 and not 1, 1)::
@@ -291,6 +266,13 @@ Profiling
 Later
 =====
 
+* efficient optimizations on objects, not only simple functions
+* handle python modules and python imports
+
+  - checksum of the .py content?
+  - how to handle C extensions? checksum of the .so file?
+  - how to handle .pyc files?
+
 * find an efficient way to specialize nested functions
 * configuration to manually help the optimizer:
 
@@ -314,21 +296,11 @@ Later
 * Function parameter: support more complex guard to complex types like
   list of integers?
 * handle default argument values for argument type guards?
-* Guards: give up on checking the value after N fails?
-* How to distribute .pyc optimized code? Modify distutils?
-* Really fix unit tests in FAT mode, don't skip them
-
-  - Rewrite test_metaclass without doctest to get assertEqual() to fix the test
-    on type.__prepare__() result type
-  - Fix test_extcall in FAT mode: rewrite doctest to unittest
-
 * Support locals()[key], vars()[key], globals()[key]?
 * Support decorators
 * Copy super() builtin to constants doesn't work. Calling the builtin super()
   function creates a free variable, whereas calling the constant doesn't
   create a free variable.
-* test_generators: rewrite test without doctest to check the type of g (see
-  the diff in mercurial on Lib/test/test_generators.py)
 
 
 Support decorator
