@@ -1380,6 +1380,12 @@ class UnrollComprehensionTests(BaseAstTests):
         self.check_optimize('{i*2 for i in "abc"}',
                             '{"aa", "bb", "cc"}')
 
+    def test_dictcomp(self):
+        self.check_optimize('{i:i for i in (1, 2, 3)}',
+                            '{1: 1, 2: 2, 3: 3}')
+        self.check_optimize('{i:i*2 for i in (1, 2, 3)}',
+                            '{1: 2, 2: 4, 3: 6}')
+
 
 class NodeVisitorTests(BaseAstTests):
     def check_call_visitor(self, visitor):

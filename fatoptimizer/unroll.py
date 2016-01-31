@@ -81,7 +81,7 @@ class UnrollStep(OptimizerStep):
 
 
 class UnrollListComp:
-    def _unroll_comp(self, node, new_ast_type):
+    def unroll_comprehension(self, node):
         if not self.config.unroll_loops:
             return
 
@@ -107,22 +107,39 @@ class UnrollListComp:
         if not isinstance(iter, ITERABLE_TYPES):
             return
 
-        items = []
-        body = node.elt
-        for value in iter:
-            ast_value = self.new_constant(node, value)
-            if ast_value is None:
-                return
-            replace = ReplaceVariable(self.filename, {target: ast_value})
-            item = replace.visit(body)
-            items.append(item)
+        if isinstance(node, ast.DictComp):
+            keys = []
+            values = []
+            for value in iter:
+                ast_value = self.new_constant(node, value)
+                if ast_value is None:
+                    return
+                replace = ReplaceVariable(self.filename, {target: ast_value})
 
-        new_node = new_ast_type(elts=items, ctx=ast.Load())
+                key = replace.visit(node.key)
+                keys.append(key)
+
+                value = replace.visit(node.value)
+                values.append(value)
+
+            new_node = ast.Dict(keys=keys, values=values, ctx=ast.Load())
+        else:
+            items = []
+            for value in iter:
+                ast_value = self.new_constant(node, value)
+                if ast_value is None:
+                    return
+                replace = ReplaceVariable(self.filename, {target: ast_value})
+                item = replace.visit(node.elt)
+                items.append(item)
+
+            # FIXME: move below?
+            if isinstance(node, ast.SetComp):
+                new_node = ast.Set(elts=items, ctx=ast.Load())
+            else:
+                assert isinstance(node, ast.ListComp)
+                new_node = ast.List(elts=items, ctx=ast.Load())
+
         copy_lineno(node, new_node)
         return new_node
 
-    def unroll_list_comp(self, node):
-        return self._unroll_comp(node, ast.List)
-
-    def unroll_set_comp(self, node):
-        return self._unroll_comp(node, ast.Set)
