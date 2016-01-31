@@ -1,6 +1,8 @@
 import ast
 
-from .tools import OptimizerStep, compact_dump, FindNodes, copy_lineno
+from .tools import (OptimizerStep, ReplaceVariable, FindNodes,
+                    compact_dump, copy_lineno,
+                    ITERABLE_TYPES)
 
 
 CANNOT_UNROLL = (ast.Break, ast.Continue, ast.Raise)
@@ -76,3 +78,45 @@ class UnrollStep(OptimizerStep):
 
         # loop was unrolled: run again the optimize on the new nodes
         return self.visit_node_list(new_node)
+
+
+class UnrollListComp:
+    def unroll_list_comp(self, node):
+        if not self.config.unroll_loops:
+            return
+
+        # FIXME: support multiple generators
+        # [i for i in range(3) for y in range(3)]
+        if len(node.generators) > 1:
+            return
+
+        generator = node.generators[0]
+        if not isinstance(generator, ast.comprehension):
+            return
+        # FIXME: support if
+        if generator.ifs:
+            return
+
+        if not isinstance(generator.target, ast.Name):
+            return
+        target = generator.target.id
+
+        if not isinstance(generator.iter, ast.Constant):
+            return
+        iter = generator.iter.value
+        if not isinstance(iter, ITERABLE_TYPES):
+            return
+
+        items = []
+        body = node.elt
+        for value in iter:
+            ast_value = self.new_constant(node, value)
+            if ast_value is None:
+                return
+            replace = ReplaceVariable(self.filename, {target: ast_value})
+            item = replace.visit(body)
+            items.append(item)
+
+        new_node = ast.List(elts=items, ctx=ast.Load())
+        copy_lineno(node, new_node)
+        return new_node

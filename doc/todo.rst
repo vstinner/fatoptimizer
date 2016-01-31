@@ -301,6 +301,13 @@ Later
 * Copy super() builtin to constants doesn't work. Calling the builtin super()
   function creates a free variable, whereas calling the constant doesn't
   create a free variable.
+* Tail-call recursion?
+
+    def factorial(n):
+        if n > 1:
+            return n * factorial(n-1)
+        else:
+            return 1
 
 
 Support decorator

@@ -549,6 +549,7 @@ class FindStrVisitor(NodeVisitor, RestrictToFunctionDefMixin):
         self.str_constants.add(node.s)
 
 
+# FIXME: add optional RestrictToFunctionDefMixin, see UnrollStep, unroll.py
 class FindNodes:
     """Find AST nodes."""
 

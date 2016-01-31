@@ -11,7 +11,7 @@ from .base_optimizer import BaseOptimizer
 from .const_propagate import ConstantPropagation
 from .const_fold import ConstantFolding
 from .call_pure import CallPureBuiltin
-from .unroll import UnrollStep
+from .unroll import UnrollStep, UnrollListComp
 from .copy_bltin_to_const import CopyBuiltinToConstantStep
 from .bltin_const import ReplaceBuiltinConstant
 from .convert_const import ConvertConstant
@@ -144,8 +144,7 @@ class NakedOptimizer(BaseOptimizer):
         optimizer = Optimizer.from_parent(self)
         return optimizer.optimize(node)
 
-    def fullvisit_FunctionDef(self, node):
-        optimizer = FunctionOptimizer.from_parent(self)
+    def _run_sub_optimizer(self, optimizer, node):
         new_node = optimizer.optimize(node)
         if isinstance(new_node, list):
             # The function was optimized
@@ -154,6 +153,17 @@ class NakedOptimizer(BaseOptimizer):
             visitor = VariableVisitor.from_node_list(self.filename, new_node)
             self.local_variables |= visitor.local_variables
         return new_node
+
+    def fullvisit_FunctionDef(self, node):
+        optimizer = FunctionOptimizer.from_parent(self)
+        return self._run_sub_optimizer(optimizer, node)
+
+    def fullvisit_ListComp(self, node):
+        optimizer = ListCompOptimizer.from_parent(self)
+        return self._run_sub_optimizer(optimizer, node)
+
+    def _optimize(self, tree):
+        return self.generic_visit(tree)
 
     def optimize(self, tree):
         self.root = tree
@@ -172,7 +182,7 @@ class NakedOptimizer(BaseOptimizer):
         self.local_variables |= visitor.local_variables
 
         # Optimize nodes
-        return self.generic_visit(tree)
+        return self._optimize(tree)
 
 
 class Optimizer(NakedOptimizer,
@@ -190,6 +200,20 @@ class Optimizer(NakedOptimizer,
 class FunctionOptimizerStage1(RestrictToFunctionDefMixin, Optimizer):
     """Stage 1 optimizer for ast.FunctionDef nodes."""
 
+
+
+class ListCompOptimizer(RestrictToFunctionDefMixin,
+                        UnrollListComp,
+                        Optimizer):
+    """Optimizer for ast.ListComp nodes."""
+
+    def _optimize(self, tree):
+        tree = self.generic_visit(tree)
+        new_tree = self.unroll_list_comp(tree)
+        if new_tree is not None:
+            # run again stage1
+            tree = self.generic_visit(new_tree)
+        return tree
 
 
 class FunctionOptimizer(NakedOptimizer,
