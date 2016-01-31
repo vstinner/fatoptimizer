@@ -12,7 +12,7 @@ from .const_propagate import ConstantPropagation
 from .const_fold import ConstantFolding
 from .call_pure import CallPureBuiltin
 from .unroll import UnrollStep
-from .copy_to_const import CopyBuiltinToConstantStep
+from .copy_bltin_to_const import CopyBuiltinToConstantStep
 from .bltin_const import ReplaceBuiltinConstant
 from .convert_const import ConvertConstant
 from .dead_code import RemoveDeadCode, remove_dead_code
