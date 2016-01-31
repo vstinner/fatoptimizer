@@ -81,7 +81,7 @@ class UnrollStep(OptimizerStep):
 
 
 class UnrollListComp:
-    def unroll_list_comp(self, node):
+    def _unroll_comp(self, node, new_ast_type):
         if not self.config.unroll_loops:
             return
 
@@ -117,6 +117,12 @@ class UnrollListComp:
             item = replace.visit(body)
             items.append(item)
 
-        new_node = ast.List(elts=items, ctx=ast.Load())
+        new_node = new_ast_type(elts=items, ctx=ast.Load())
         copy_lineno(node, new_node)
         return new_node
+
+    def unroll_list_comp(self, node):
+        return self._unroll_comp(node, ast.List)
+
+    def unroll_set_comp(self, node):
+        return self._unroll_comp(node, ast.Set)

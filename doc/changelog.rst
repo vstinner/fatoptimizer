@@ -12,7 +12,7 @@ fatoptimizer changelog
   * New optimization: call pure methods of builtin types. For example,
     replace ``"abc".encode()`` with ``b'abc'``.
   * Update for fat API version 0.3, GuardBuiltins constructor changed.
-  * Basic "loop unrolling" on list-comprehension
+  * Basic "loop unrolling" on list-comprehension and set-comprehension
 
 * 2016-01-23: Version 0.2
 

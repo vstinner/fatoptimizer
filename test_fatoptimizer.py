@@ -1362,7 +1362,7 @@ class UnrollLoopTests(BaseAstTests):
         """)
 
 
-class UnrollListComprehensionTests(BaseAstTests):
+class UnrollComprehensionTests(BaseAstTests):
     def setUp(self):
         super().setUp()
         self.config.unroll_loops = 16
@@ -1373,6 +1373,12 @@ class UnrollListComprehensionTests(BaseAstTests):
                             '[1, 2, 3]')
         self.check_optimize('[i*2 for i in "abc"]',
                             '["aa", "bb", "cc"]')
+
+    def test_setcomp(self):
+        self.check_optimize('{i for i in (1, 2, 3)}',
+                            '{1, 2, 3}')
+        self.check_optimize('{i*2 for i in "abc"}',
+                            '{"aa", "bb", "cc"}')
 
 
 class NodeVisitorTests(BaseAstTests):

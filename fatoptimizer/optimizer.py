@@ -162,6 +162,10 @@ class NakedOptimizer(BaseOptimizer):
         optimizer = ListCompOptimizer.from_parent(self)
         return self._run_sub_optimizer(optimizer, node)
 
+    def fullvisit_SetComp(self, node):
+        optimizer = ListCompOptimizer.from_parent(self)
+        return self._run_sub_optimizer(optimizer, node)
+
     def _optimize(self, tree):
         return self.generic_visit(tree)
 
@@ -205,11 +209,15 @@ class FunctionOptimizerStage1(RestrictToFunctionDefMixin, Optimizer):
 class ListCompOptimizer(RestrictToFunctionDefMixin,
                         UnrollListComp,
                         Optimizer):
-    """Optimizer for ast.ListComp nodes."""
+    """Optimizer for ast.ListComp and ast.SetComp nodes."""
 
     def _optimize(self, tree):
+        set_comp = isinstance(tree, ast.SetComp)
         tree = self.generic_visit(tree)
-        new_tree = self.unroll_list_comp(tree)
+        if set_comp:
+            new_tree = self.unroll_set_comp(tree)
+        else:
+            new_tree = self.unroll_list_comp(tree)
         if new_tree is not None:
             # run again stage1
             tree = self.generic_visit(new_tree)
