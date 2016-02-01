@@ -2766,6 +2766,7 @@ class SimplifyIterableTests(BaseAstTests):
                 pass
         ''')
 
+
 class InliningTests(BaseAstTests):
     def setUp(self):
         super().setUp()
@@ -2774,10 +2775,10 @@ class InliningTests(BaseAstTests):
     def test_config(self):
         self.config.inlining = False
         self.check_dont_optimize('''
-            def f(x):
-                return g(x)
             def g(x):
-                return x * x
+                return 42
+            def f(x):
+                return g(x) + 3
         ''')
 
     def test_trivial(self):

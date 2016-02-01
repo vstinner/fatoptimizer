@@ -32,6 +32,9 @@ class InlineSubstitution(OptimizerStep):
         return candidate
 
     def visit_Call(self, node):
+        if not self.config.inlining:
+            return
+
         # TODO: renaming variables to avoid clashes
         # or do something like:
         #   .saved_locals = locals()
