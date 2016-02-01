@@ -1,8 +1,11 @@
-.. _optim:
-
 +++++++++++++
 Optimizations
 +++++++++++++
+
+.. _optim:
+
+Optimizations
+=============
 
 Implementated optimizations:
 
@@ -14,6 +17,7 @@ Implementated optimizations:
 * :ref:`Dead code elimination <dead-code>`
 * :ref:`Copy builtin functions to constants <copy-builtin-to-constant>`
 * :ref:`Simplify iterable <simplify-iterable>`
+* :ref:`Function inlining <inlining>`
 
 
 .. _call-pure:
@@ -57,6 +61,10 @@ By default, only loops with 16 iterations or less are optimized.
    the loop is not unrolled.
 
 :ref:`Configuration option <config>`: ``unroll_loops``.
+
+.. seealso::
+   Read the `Wikipedia article on loop unrolling
+   <https://en.wikipedia.org/wiki/Loop_unrolling>`_.
 
 
 tuple example
@@ -112,18 +120,18 @@ range example
 
 Example of a loop using ``range()``.
 
-+--------------------------+--------------------------+
-| Original                 | Loop unrolled            |
-+==========================+==========================+
-| ::                       | ::                       |
-|                          |                          |
-|  def func():             |  def func():             |
-|      for i in range(2):  |      i = 0               |
-|          print(i)        |      print(i)            |
-|                          |                          |
-|                          |      i = 1               |
-|                          |      print(i)            |
-+--------------------------+--------------------------+
++--------------------------+---------------+
+| Original                 | Loop unrolled |
++==========================+===============+
+| ::                       | ::            |
+|                          |               |
+|  def func():             |  def func():  |
+|      for i in range(2):  |      i = 0    |
+|          print(i)        |      print(i) |
+|                          |               |
+|                          |      i = 1    |
+|                          |      print(i) |
++--------------------------+---------------+
 
 The specialized bytecode requires two :ref:`guards <guard>`:
 
@@ -139,6 +147,10 @@ even more interesting::
 
         i = 1
         print(1)
+
+.. note::
+   Since replacing ``range()`` requires a specialization with guard, the
+   optimization is only implemented at function level.
 
 
 .. _const-prop:
@@ -160,6 +172,10 @@ Propagate constant values of variables.
 +----------------+----------------------+
 
 :ref:`Configuration option <config>`: ``constant_propagation``.
+
+.. seealso::
+   Read the `Wikipedia article on copy propagation
+   <https://en.wikipedia.org/wiki/Copy_propagation>`_.
 
 
 .. _const-fold:
@@ -225,6 +241,10 @@ x in {1, 2, 3}       x in frozenset({1, 2, 3})
 
 :ref:`Configuration option <config>`: ``constant_folding``.
 
+.. seealso::
+   Read the `Wikipedia article on constant folding
+   <https://en.wikipedia.org/wiki/Constant_folding>`_.
+
 
 .. _replace-builtin-constant:
 
@@ -245,90 +265,94 @@ Remove the dead code.
 
 Examples:
 
-+--------------------------+--------------------------+
-| Code                     | Dead code removed        |
-+==========================+==========================+
-| ::                       | ::                       |
-|                          |                          |
-|  if test:                |  if not test:            |
-|      pass                |      else_block          |
-|  else:                   |                          |
-|      else_block          |                          |
-+--------------------------+--------------------------+
-| ::                       | ::                       |
-|                          |                          |
-|  if 1:                   |  body_block              |
-|      body_block          |                          |
-+--------------------------+--------------------------+
-| ::                       | ::                       |
-|                          |                          |
-|  if 0:                   |  pass                    |
-|      body_block          |                          |
-+--------------------------+--------------------------+
-| ::                       | ::                       |
-|                          |                          |
-|  if False:               |  else_block              |
-|      body_block          |                          |
-|  else:                   |                          |
-|      else_block          |                          |
-+--------------------------+--------------------------+
-| ::                       | ::                       |
-|                          |                          |
-|  while 0:                |  pass                    |
-|      body_block          |                          |
-+--------------------------+--------------------------+
-| ::                       | ::                       |
-|                          |                          |
-|  while 0:                |  else_block              |
-|      body_block          |                          |
-|  else:                   |                          |
-|      else_block          |                          |
-+--------------------------+--------------------------+
-| ::                       | ::                       |
-|                          |                          |
-|  ...                     |  ...                     |
-|  return ...              |  return ...              |
-|  dead_code_block         |                          |
-+--------------------------+--------------------------+
-| ::                       | ::                       |
-|                          |                          |
-|  ...                     |  ...                     |
-|  raise ...               |  raise ...               |
-|  dead_code_block         |                          |
-+--------------------------+--------------------------+
-| ::                       | ::                       |
-|                          |                          |
-|  try:                    |  pass                    |
-|      pass                |                          |
-|  except ...:             |                          |
-|      ...                 |                          |
-+--------------------------+--------------------------+
-| ::                       | ::                       |
-|                          |                          |
-|  try:                    |  else_block              |
-|      pass                |                          |
-|  except ...:             |                          |
-|      ...                 |                          |
-|  else:                   |                          |
-|      else_block          |                          |
-+--------------------------+--------------------------+
-| ::                       | ::                       |
-|                          |                          |
-|  try:                    |  try:                    |
-|      pass                |     else_block           |
-|  except ...:             |  finally:                |
-|      ...                 |     final_block          |
-|  else:                   |                          |
-|      else_block          |                          |
-|  finally:                |                          |
-|      final_block         |                          |
-+--------------------------+--------------------------+
++------------------+-------------------+
+| Code             | Dead code removed |
++==================+===================+
+| ::               | ::                |
+|                  |                   |
+|  if test:        |  if not test:     |
+|      pass        |      else_block   |
+|  else:           |                   |
+|      else_block  |                   |
++------------------+-------------------+
+| ::               | ::                |
+|                  |                   |
+|  if 1:           |  body_block       |
+|      body_block  |                   |
++------------------+-------------------+
+| ::               | ::                |
+|                  |                   |
+|  if 0:           |  pass             |
+|      body_block  |                   |
++------------------+-------------------+
+| ::               | ::                |
+|                  |                   |
+|  if False:       |  else_block       |
+|      body_block  |                   |
+|  else:           |                   |
+|      else_block  |                   |
++------------------+-------------------+
+| ::               | ::                |
+|                  |                   |
+|  while 0:        |  pass             |
+|      body_block  |                   |
++------------------+-------------------+
+| ::               | ::                |
+|                  |                   |
+|  while 0:        |  else_block       |
+|      body_block  |                   |
+|  else:           |                   |
+|      else_block  |                   |
++------------------+-------------------+
+| ::               | ::                |
+|                  |                   |
+|  ...             |  ...              |
+|  return ...      |  return ...       |
+|  dead_code_block |                   |
++------------------+-------------------+
+| ::               | ::                |
+|                  |                   |
+|  ...             |  ...              |
+|  raise ...       |  raise ...        |
+|  dead_code_block |                   |
++------------------+-------------------+
+| ::               | ::                |
+|                  |                   |
+|  try:            |  pass             |
+|      pass        |                   |
+|  except ...:     |                   |
+|      ...         |                   |
++------------------+-------------------+
+| ::               | ::                |
+|                  |                   |
+|  try:            |  else_block       |
+|      pass        |                   |
+|  except ...:     |                   |
+|      ...         |                   |
+|  else:           |                   |
+|      else_block  |                   |
++------------------+-------------------+
+| ::               | ::                |
+|                  |                   |
+|  try:            |  try:             |
+|      pass        |     else_block    |
+|  except ...:     |  finally:         |
+|      ...         |     final_block   |
+|  else:           |                   |
+|      else_block  |                   |
+|  finally:        |                   |
+|      final_block |                   |
++------------------+-------------------+
 
 .. note::
    If a code block contains ``continue``, ``global``, ``nonlocal``, ``yield``
    or ``yield from``, it is not removed.
 
 :ref:`Configuration option <config>`: ``remove_dead_code``.
+
+.. seealso::
+   Read the `Wikipedia article on Dead code elimination
+   <https://en.wikipedia.org/wiki/Dead_code_elimination>`_.
 
 
 .. _copy-builtin-to-constant:
@@ -423,15 +447,44 @@ Code                          Simplified iterable
 
 :ref:`Configuration option <config>`: ``simplify_iterable``.
 
+.. _inlining:
+
+Function inlining
+-----------------
+
+Replace a function call site with the body of the called function.
+
+.. note::
+   The implementation is currently experimental and so disabled by default.
+
++-----------------------+---------------------+
+| Original code         | Function inlining   |
++=======================+=====================+
+| ::                    | ::                  |
+|                       |                     |
+|   def g():            |   def g():          |
+|       return 42       |       return 42     |
+|                       |                     |
+|   def f():            |   def f():          |
+|       return g(x) + 3 |       return 42 + 3 |
+|                       |                     |
++-----------------------+---------------------+
+
+:ref:`Configuration option <config>`: ``inlining``.
+
+.. seealso::
+   Read the `Wikipedia article on Inline expansion
+   <https://en.wikipedia.org/wiki/Inline_expansion>`_.
+
 
 Comparison with the peephole optimizer
---------------------------------------
+======================================
 
 The `CPython peephole optimizer
 <https://faster-cpython.readthedocs.org/bytecode.html#cpython-peephole-optimizer>`_
-only implements a few optimizations: :ref:`constant folding <const-fold>` and
-:ref:`dead code elimination <dead-code>`. fatoptimizer implements more
-:ref:`optimizations <optim>`.
+only implements a few optimizations: :ref:`constant folding <const-fold>`,
+:ref:`dead code elimination <dead-code>` and optimizations of jumps.
+fatoptimizer implements more :ref:`optimizations <optim>`.
 
 The peephole optimizer doesn't support :ref:`constant propagation
 <const-prop>`. Example::
@@ -441,7 +494,7 @@ The peephole optimizer doesn't support :ref:`constant propagation
         return x
 
 +----------------------------------+------------------------------------+
-| Regular bytecode                 | FAT mode bytecode                  |
+| Regular bytecode                 | fatoptimizer bytecode              |
 +==================================+====================================+
 | ::                               | ::                                 |
 |                                  |                                    |
@@ -449,7 +502,6 @@ The peephole optimizer doesn't support :ref:`constant propagation
 |   STORE_FAST               0 (x) |   STORE_FAST               0 (x)   |
 |   LOAD_FAST                0 (x) |   LOAD_CONST               1 (333) |
 |   RETURN_VALUE                   |   RETURN_VALUE                     |
-|                                  |                                    |
 |                                  |                                    |
 +----------------------------------+------------------------------------+
 
@@ -461,7 +513,7 @@ but ``"x"`` and ``"y"`` are kept. Example::
         return "x" + "y"
 
 +-----------------------------+------------------------+
-| Regular constants           | FAT mode constants     |
+| Regular constants           | fatoptimizer constants |
 +=============================+========================+
 | ``(None, 'x', 'y', 'xy')``: | ``(None, 'xy')``:      |
 | 4 constants                 | 2 constants            |
@@ -470,5 +522,3 @@ but ``"x"`` and ``"y"`` are kept. Example::
 The peephole optimizer has a similar limitation even when building tuple
 constants. The compiler produces AST nodes of type ``ast.Tuple``, the tuple
 items are kept in code constants.
-
-

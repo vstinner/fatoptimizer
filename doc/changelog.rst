@@ -7,6 +7,8 @@ fatoptimizer changelog
 
 * Version 0.3
 
+  * Experimental implementation of function inlining, implemented by David
+    Malcolm.
   * New optimization: call pure methods of builtin types. For example,
     replace ``"abc".encode()`` with ``b'abc'``.
   * Update for fat API version 0.3, GuardBuiltins constructor changed.

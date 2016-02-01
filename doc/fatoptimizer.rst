@@ -81,6 +81,9 @@ the ``__fatoptimizer__`` variable. Configuration keys:
 * ``copy_builtin_to_constant`` (``bool``): enable :ref:`copy builtin functions
   to constants <copy-builtin-to-constant>` optimization? (default: false)
 
+* ``inlining`` (``bool``): enable :ref:`function inlining
+  <inlining>` optimization? (default: false)
+
 * ``remove_dead_code`` (``bool``): enable :ref:`dead code elimination
   <dead-code>` optimization? (default: true)
 
@@ -136,5 +139,3 @@ There are also integration tests which requires a Python 3.6 with patches PEP
 
     python3.6 -X fat test_fat_config.py
     python3.6 -X fat test_fat_size.py
-
-
