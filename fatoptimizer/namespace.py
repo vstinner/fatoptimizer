@@ -245,10 +245,19 @@ class Namespace:
             return UNSET
         return self._variables.get(name, UNSET)
 
+# HACK!
+# Nasty global state.  Mapping from names to FunctionDef nodes.
+# I attempted to wire up discovery of this mapping into NamespaceStep,
+# but for some reason if I store it in self.namespace, the inliner
+# instance doesn't see it (perhaps is seeing a different Namespace
+# instance, or the order in which the visit hooks is run is wrong
+_fndefs = {}
 
 class NamespaceStep(OptimizerStep):
     def fullvisit_FunctionDef(self, node):
         self.namespace.set(node.name, UNSET)
+        global _fndefs
+        _fndefs[node.name] = node
 
     def fullvisit_AsyncFunctionDef(self, node):
         self.namespace.set(node.name, UNSET)

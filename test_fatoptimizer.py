@@ -2766,6 +2766,64 @@ class SimplifyIterableTests(BaseAstTests):
                 pass
         ''')
 
+class InliningTests(BaseAstTests):
+    def setUp(self):
+        super().setUp()
+        self.config.inlining = True
+
+    def test_config(self):
+        self.config.inlining = False
+        self.check_dont_optimize('''
+            def f(x):
+                return g(x)
+            def g(x):
+                return x * x
+        ''')
+
+    def test_trivial(self):
+        self.check_optimize('''
+            def g(x):
+                return 42
+            def f(x):
+                return g(x) + 3
+        ''', '''
+            def g(x):
+                return 42
+            def f(x):
+                return 42 + 3
+        ''')
+
+    def test_simple(self):
+        self.check_optimize('''
+            def g(x):
+                return x * x
+            def f(x):
+                return g(x) + 3
+        ''', '''
+            def g(x):
+                return x * x
+            def f(x):
+                return (x * x) + 3
+        ''')
+
+    # TODO: it shouldn't matter which order f and g are defined
+
+    # TODO: this one is currently failing
+    def test_use_of_locals(self):
+        self.check_dont_optimize('''
+            def f(x):
+                return g(x)
+            def g(x):
+                return locals()
+        ''')
+        self.check_dont_optimize('''
+            def f(x):
+                print(locals())
+                return g(x)
+            def g(x):
+                return x * x
+        ''')
+
 
 class ModuleConfigTests(BaseAstTests):
     def get_config(self, config_dict):
