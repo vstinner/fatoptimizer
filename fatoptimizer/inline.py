@@ -59,6 +59,8 @@ class InlineSubstitution(OptimizerStep):
             return False
         if candidate.args.defaults:
             return False
+        if len(candidate.args.args) != len(callsite.args):
+            return False
 
         # For now, only allow functions that simply return a value
         body = candidate.body

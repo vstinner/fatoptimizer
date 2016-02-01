@@ -2873,6 +2873,14 @@ class InliningTests(BaseAstTests):
                 return f(x)
         ''')
 
+    def test_wrong_number_of_positional_args(self):
+        self.check_dont_optimize('''
+            def g(x):
+                return x * x
+            def f(x):
+                return g() + 3
+        ''')
+
     @unittest.expectedFailure
     def test_starargs(self):
         self.check_optimize('''
