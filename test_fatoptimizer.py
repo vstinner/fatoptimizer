@@ -1368,6 +1368,16 @@ class UnrollComprehensionTests(BaseAstTests):
         self.config.unroll_loops = 16
         self.config.constant_folding = True
 
+    def test_config_disable(self):
+        self.config.unroll_loops = 0
+        self.check_dont_optimize('[i for i in (1, 2, 3)]')
+
+    def test_config_max_loops(self):
+        self.config.unroll_loops = 3
+        self.check_optimize('[i for i in (1, 2, 3)]',
+                            '[1, 2, 3]')
+        self.check_dont_optimize('[i for i in (1, 2, 3, 4)]')
+
     def test_listcomp(self):
         self.check_optimize('[i for i in (1, 2, 3)]',
                             '[1, 2, 3]')

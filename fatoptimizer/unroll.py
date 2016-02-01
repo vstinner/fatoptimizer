@@ -103,14 +103,16 @@ class UnrollListComp:
 
         if not isinstance(generator.iter, ast.Constant):
             return
-        iter = generator.iter.value
-        if not isinstance(iter, ITERABLE_TYPES):
+        iter_value = generator.iter.value
+        if not isinstance(iter_value, ITERABLE_TYPES):
+            return
+        if not(1 <= len(iter_value) <= self.config.unroll_loops):
             return
 
         if isinstance(node, ast.DictComp):
             keys = []
             values = []
-            for value in iter:
+            for value in iter_value:
                 ast_value = self.new_constant(node, value)
                 if ast_value is None:
                     return
@@ -125,7 +127,7 @@ class UnrollListComp:
             new_node = ast.Dict(keys=keys, values=values, ctx=ast.Load())
         else:
             items = []
-            for value in iter:
+            for value in iter_value:
                 ast_value = self.new_constant(node, value)
                 if ast_value is None:
                     return
