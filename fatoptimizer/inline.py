@@ -1,7 +1,18 @@
 import ast
 
-from .tools import OptimizerStep, pretty_dump, NodeTransformer
-#from .specialized import BuiltinGuard
+from .tools import OptimizerStep, pretty_dump, NodeTransformer, NodeVisitor
+
+class Checker(NodeVisitor):
+    '''Gather a list of problems that would prevent inlining a function.'''
+    def __init__(self):
+        self.problems = []
+
+    def visit_Call(self, node):
+        # Reject explicit attempts to use locals()
+        # TODO: detect uses via other names
+        if isinstance(node.func, ast.Name):
+            if node.func.id == 'locals':
+                self.problems.append('use of locals()')
 
 class RenameVisitor(NodeTransformer):
     def __init__(self, callsite, inlinable):
@@ -31,9 +42,8 @@ class InlineSubstitution(OptimizerStep):
     def can_inline(self, callsite):
         '''Given a Call callsite, determine whether we should inline
         the callee.  If so, return the callee FunctionDef, otherwise
-        return None'''
+        return None.'''
         # TODO: size criteria?
-        # TODO: don't do it if either uses locals()
         # TODO: don't do it for recursive functions
         if not isinstance(callsite.func, ast.Name):
             return None
@@ -67,6 +77,12 @@ class InlineSubstitution(OptimizerStep):
         if len(body) != 1:
             return None
         if not isinstance(body[0], ast.Return):
+            return None
+
+        # Walk the candidate's nodes looking for potential problems
+        c = Checker()
+        c.visit(body[0])
+        if c.problems:
             return None
 
         # All checks passed
@@ -108,5 +124,8 @@ FunctionDef(name='g', args=arguments(args=[
         returned_expr = inlinable.body[0].value
         # Rename params/args
         v = RenameVisitor(node, inlinable)
-        new_expr = v.visit(returned_expr)
+        try:
+            new_expr = v.visit(returned_expr)
+        except NotInlinable:
+            return node
         return new_expr

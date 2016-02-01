@@ -2935,20 +2935,29 @@ class InliningTests(BaseAstTests):
                 return (x * x) + 3
         ''')
 
-    @unittest.expectedFailure
-    def test_use_of_locals(self):
+    def test_callee_uses_locals(self):
         self.check_dont_optimize('''
-            def f(x):
-                return g(x)
-            def g(x):
+            def g1(y):
                 return locals()
+            def f1(x):
+                return g1(x)
         ''')
-        self.check_dont_optimize('''
-            def f(x):
+
+    def test_caller_uses_locals(self):
+        self.check_optimize('''
+            def g2(y):
+                return y * y
+            def f2(x):
+                a = g2(x)
                 print(locals())
-                return g(x)
-            def g(x):
-                return x * x
+                return a
+        ''', '''
+            def g2(y):
+                return y * y
+            def f2(x):
+                a = x * x
+                print(locals())
+                return a
         ''')
 
 
