@@ -2871,6 +2871,19 @@ class InliningTests(BaseAstTests):
                 return (x * x) + 3
         ''')
 
+    def test_constant(self):
+        self.check_optimize('''
+            def g(x):
+                return x * x
+            def f(x):
+                return g(7) + 3
+        ''', '''
+            def g(x):
+                return x * x
+            def f(x):
+                return (7 * 7) + 3
+        ''')
+
     def test_self_recursive(self):
         self.check_dont_optimize('''
             def f(x):

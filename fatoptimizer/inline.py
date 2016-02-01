@@ -31,15 +31,14 @@ class RenameVisitor(NodeTransformer):
         assert inlinable.args.kwarg is None
         assert inlinable.args.defaults == []
 
-        # Mapping from name in callee to name in caller
+        # Mapping from name in callee to node in caller
         self.remapping = {}
         for formal, actual in zip(inlinable.args.args, actual_pos_args):
-            self.remapping[formal.arg] = actual.id
+            self.remapping[formal.arg] = actual
 
     def visit_Name(self, node):
-        assert isinstance(node.ctx, ast.Load) # FIXME
         if node.id in self.remapping:
-            return ast.Name(id=self.remapping[node.id], ctx=node.ctx)
+            return self.remapping[node.id]
         return node
 
 class Expansion:
