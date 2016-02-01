@@ -3031,6 +3031,19 @@ class InliningTests(BaseAstTests):
                    return 0
         ''')
 
+    def test_pass(self):
+        self.check_optimize('''
+            def noop(a, b, c):
+                pass
+            def caller_of_noop(x):
+                a = noop(x, 4, 'foo')
+        ''', '''
+            def noop(a, b, c):
+                pass
+            def caller_of_noop(x):
+                a = None
+        ''')
+
 class ModuleConfigTests(BaseAstTests):
     def get_config(self, config_dict):
         source = '__fatoptimizer__ = %r' % config_dict

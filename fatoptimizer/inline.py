@@ -111,7 +111,8 @@ class InlineSubstitution(OptimizerStep):
         body = candidate.body
         if len(body) != 1:
             return None
-        if not isinstance(body[0], ast.Return):
+        if not (isinstance(body[0], ast.Return)
+                or isinstance(body[0], ast.Pass)):
             return None
 
         # Walk the candidate's nodes looking for potential problems
@@ -145,9 +146,14 @@ class InlineSubstitution(OptimizerStep):
             print(pretty_dump(funcdef))
         # Substitute the Call with the expression of the single return stmt
         # within the callee.
-        # This assumes a single Return stmt
-        returned_expr = funcdef.body[0].value
-        # Rename params/args
-        v = RenameVisitor(node, funcdef, expansion.actual_pos_args)
-        new_expr = v.visit(returned_expr)
+        # This assumes a single Return or Pass stmt
+        stmt = funcdef.body[0]
+        if isinstance(stmt, ast.Return):
+            returned_expr = funcdef.body[0].value
+            # Rename params/args
+            v = RenameVisitor(node, funcdef, expansion.actual_pos_args)
+            new_expr = v.visit(returned_expr)
+        else:
+            assert isinstance(stmt, ast.Pass)
+            new_expr = self.new_constant(stmt, None)
         return new_expr
