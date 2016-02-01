@@ -2793,6 +2793,22 @@ class InliningTests(BaseAstTests):
                 return 42 + 3
         ''')
 
+    # It shouldn't matter if the caller is defined before the callee,
+    # but currently it does
+    @unittest.expectedFailure
+    def test_out_of_order(self):
+        self.check_optimize('''
+            def f(x):
+                return g(x) + 3
+            def g(x):
+                return 42
+        ''', '''
+            def f(x):
+                return 42 + 3
+            def g(x):
+                return 42
+        ''')
+
     def test_simple(self):
         self.check_optimize('''
             def g(x):
@@ -2806,9 +2822,36 @@ class InliningTests(BaseAstTests):
                 return (x * x) + 3
         ''')
 
-    # TODO: it shouldn't matter which order f and g are defined
+    def test_self_recursive(self):
+        self.check_dont_optimize('''
+            def f(x):
+                return f(x)
+        ''')
 
-    # TODO: this one is currently failing
+    @unittest.expectedFailure
+    def test_mutually_recursive(self):
+        self.check_dont_optimize('''
+            def f(x):
+                return g(x)
+            def g(x):
+                return f(x)
+        ''')
+
+    @unittest.expectedFailure
+    def test_remap_varnames(self):
+        self.check_optimize('''
+            def g(y):
+                return y * y
+            def f(x):
+                return g(x) + 3
+        ''', '''
+            def g(y):
+                return y * y
+            def f(x):
+                return (x * x) + 3
+        ''')
+
+    @unittest.expectedFailure
     def test_use_of_locals(self):
         self.check_dont_optimize('''
             def f(x):
