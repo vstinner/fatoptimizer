@@ -18,7 +18,7 @@ from .convert_const import ConvertConstant
 from .dead_code import RemoveDeadCode, remove_dead_code
 from .iterable import SimplifyIterable, SimplifyIterableSpecialize
 from .call_method import CallPureMethods
-
+from .inline import InlineSubstitution
 
 def add_import(tree, name, asname):
     # import fat as __fat__
@@ -195,6 +195,7 @@ class FunctionOptimizerStage1(RestrictToFunctionDefMixin, Optimizer):
 class FunctionOptimizer(NakedOptimizer,
                         CallPureBuiltin,
                         SimplifyIterableSpecialize,
+                        InlineSubstitution,
                         CopyBuiltinToConstantStep):
     """Optimizer for ast.FunctionDef nodes.
 

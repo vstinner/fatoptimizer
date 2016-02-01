@@ -2766,6 +2766,135 @@ class SimplifyIterableTests(BaseAstTests):
                 pass
         ''')
 
+class InliningTests(BaseAstTests):
+    def setUp(self):
+        super().setUp()
+        self.config.inlining = True
+
+    def test_config(self):
+        self.config.inlining = False
+        self.check_dont_optimize('''
+            def f(x):
+                return g(x)
+            def g(x):
+                return x * x
+        ''')
+
+    def test_trivial(self):
+        self.check_optimize('''
+            def g(x):
+                return 42
+            def f(x):
+                return g(x) + 3
+        ''', '''
+            def g(x):
+                return 42
+            def f(x):
+                return 42 + 3
+        ''')
+
+    # It shouldn't matter if the caller is defined before the callee,
+    # but currently it does
+    @unittest.expectedFailure
+    def test_out_of_order(self):
+        self.check_optimize('''
+            def f(x):
+                return g(x) + 3
+            def g(x):
+                return 42
+        ''', '''
+            def f(x):
+                return 42 + 3
+            def g(x):
+                return 42
+        ''')
+
+    def test_simple(self):
+        self.check_optimize('''
+            def g(x):
+                return x * x
+            def f(x):
+                return g(x) + 3
+        ''', '''
+            def g(x):
+                return x * x
+            def f(x):
+                return (x * x) + 3
+        ''')
+
+    def test_self_recursive(self):
+        self.check_dont_optimize('''
+            def f(x):
+                return f(x)
+        ''')
+
+    @unittest.expectedFailure
+    def test_mutually_recursive(self):
+        self.check_dont_optimize('''
+            def f(x):
+                return g(x)
+            def g(x):
+                return f(x)
+        ''')
+
+    @unittest.expectedFailure
+    def test_starargs(self):
+        self.check_optimize('''
+            def g(*args):
+                return args[0]
+            def f(x):
+                return g(1, 2, 3) + 3
+        ''', '''
+            def g(*args):
+                return args[0]
+            def f(x):
+                return (1, 2, 3)[0] + 3
+        ''')
+
+    @unittest.expectedFailure
+    def test_kwargs(self):
+        self.check_optimize('''
+            def g(**kwargs):
+                return args['foo']
+            def f(x):
+                return g(foo=42) + 3
+        ''', '''
+            def g(**kwargs):
+                return args['foo']
+            def f(x):
+                return {'foo':42}['foo'] + 3
+        ''')
+
+    @unittest.expectedFailure
+    def test_remap_varnames(self):
+        self.check_optimize('''
+            def g(y):
+                return y * y
+            def f(x):
+                return g(x) + 3
+        ''', '''
+            def g(y):
+                return y * y
+            def f(x):
+                return (x * x) + 3
+        ''')
+
+    @unittest.expectedFailure
+    def test_use_of_locals(self):
+        self.check_dont_optimize('''
+            def f(x):
+                return g(x)
+            def g(x):
+                return locals()
+        ''')
+        self.check_dont_optimize('''
+            def f(x):
+                print(locals())
+                return g(x)
+            def g(x):
+                return x * x
+        ''')
+
 
 class ModuleConfigTests(BaseAstTests):
     def get_config(self, config_dict):

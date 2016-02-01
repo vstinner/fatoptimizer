@@ -12,6 +12,7 @@ class Config:
         constant_propagation
         copy_builtin_to_constant
         enabled
+        inlining
         logger
         max_bytes_len
         max_constant_size
@@ -120,6 +121,7 @@ class Config:
         self.replace_builtin_constant = False
         self.remove_dead_code = False
         self.simplify_iterable = False
+        self.inlining = False
 
     def enable_all(self):
         self.max_constant_size = 1024   # 1 KB
@@ -136,6 +138,7 @@ class Config:
         self.replace_builtin_constant = True
         self.remove_dead_code = True
         self.simplify_iterable = True
+        self.inlining = True
 
         from .builtins import add_pure_builtins
         add_pure_builtins(self)
