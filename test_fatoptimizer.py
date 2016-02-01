@@ -3006,6 +3006,30 @@ class InliningTests(BaseAstTests):
                 return a
         ''')
 
+    def test_compound_expression(self):
+        self.check_optimize('''
+            def discriminant(a, b, c):
+                return (b * b) - (4 * a * c)
+            def count_real_solutions(a, b, c):
+                d = discriminant(a, b, c)
+                if d > 0:
+                   return 2
+                elif d == 0:
+                   return 1
+                else:
+                   return 0
+        ''', '''
+            def discriminant(a, b, c):
+                return (b * b) - (4 * a * c)
+            def count_real_solutions(a, b, c):
+                d = (b * b) - (4 * a * c)
+                if d > 0:
+                   return 2
+                elif d == 0:
+                   return 1
+                else:
+                   return 0
+        ''')
 
 class ModuleConfigTests(BaseAstTests):
     def get_config(self, config_dict):
