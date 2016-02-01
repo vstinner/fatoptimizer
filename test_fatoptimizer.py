@@ -2838,6 +2838,34 @@ class InliningTests(BaseAstTests):
         ''')
 
     @unittest.expectedFailure
+    def test_starargs(self):
+        self.check_optimize('''
+            def g(*args):
+                return args[0]
+            def f(x):
+                return g(1, 2, 3) + 3
+        ''', '''
+            def g(*args):
+                return args[0]
+            def f(x):
+                return (1, 2, 3)[0] + 3
+        ''')
+
+    @unittest.expectedFailure
+    def test_kwargs(self):
+        self.check_optimize('''
+            def g(**kwargs):
+                return args['foo']
+            def f(x):
+                return g(foo=42) + 3
+        ''', '''
+            def g(**kwargs):
+                return args['foo']
+            def f(x):
+                return {'foo':42}['foo'] + 3
+        ''')
+
+    @unittest.expectedFailure
     def test_remap_varnames(self):
         self.check_optimize('''
             def g(y):
