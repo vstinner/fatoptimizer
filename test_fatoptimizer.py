@@ -2829,6 +2829,19 @@ class InliningTests(BaseAstTests):
                 return 42 + 3
         ''')
 
+    def test_nested_function(self):
+        self.check_optimize('''
+            def f(x):
+                def g(x):
+                    return 100
+                return g(x) + 3
+        ''', '''
+            def f(x):
+                def g(x):
+                    return 100
+                return 100 + 3
+        ''')
+
     # It shouldn't matter if the caller is defined before the callee,
     # but currently it does
     @unittest.expectedFailure
