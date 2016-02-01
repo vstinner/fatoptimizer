@@ -8,22 +8,25 @@ class InlineSubstitution(OptimizerStep):
     """Function call inlining."""
 
     def can_inline(self, node):
+        '''Given a Call node, determine whether we should inline
+        the callee.  If so, return the callee FunctionDef, otherwise
+        return None'''
         # TODO: size criteria?
         # TODO: don't do it if either uses locals()
         # TODO: don't do it for recursive functions
         if not isinstance(node.func, ast.Name):
-            return False
+            return None
         from .namespace import _fndefs
         if node.func.id not in _fndefs:
-            return False
+            return None
         candidate = _fndefs[node.func.id]
 
         # For now, only allow functions that simply return a value
         body = candidate.body
         if len(body) != 1:
-            return False
+            return None
         if not isinstance(body[0], ast.Return):
-            return False
+            return None
 
         # All checks passed
         return candidate
