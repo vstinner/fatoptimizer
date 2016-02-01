@@ -2886,12 +2886,20 @@ class InliningTests(BaseAstTests):
                 return f(x)
         ''')
 
-    def test_wrong_number_of_positional_args(self):
+    def test_not_enough_positional_args(self):
         self.check_dont_optimize('''
             def g(x):
                 return x * x
             def f(x):
                 return g() + 3
+        ''')
+
+    def test_too_many_positional_args(self):
+        self.check_dont_optimize('''
+            def g(x):
+                return x * x
+            def f(p, q, r):
+                return g(p, q, r) + 3
         ''')
 
     @unittest.expectedFailure
@@ -2906,6 +2914,31 @@ class InliningTests(BaseAstTests):
                 return args[0]
             def f(x):
                 return (1, 2, 3)[0] + 3
+        ''')
+
+    def test_keyword_args(self):
+        self.check_optimize('''
+            def g(foo, bar):
+                return foo * bar
+            def f(x, y):
+                return g(foo=x, bar=y) + 3
+        ''', '''
+            def g(foo, bar):
+                return foo * bar
+            def f(x, y):
+                return (x * y) + 3
+        ''')
+    def test_keyword_args_reversed(self):
+        self.check_optimize('''
+            def g(foo, bar):
+                return foo * bar
+            def f(x, y):
+                return g(bar=x, foo=y) + 3
+        ''', '''
+            def g(foo, bar):
+                return foo * bar
+            def f(x, y):
+                return (y * x) + 3
         ''')
 
     @unittest.expectedFailure
