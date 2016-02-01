@@ -88,6 +88,10 @@ class Config:
         # Example: "if 0: ..." => "pass"
         self.remove_dead_code = True
 
+        # Function inlining
+        # Disable by default: it's still experimental.
+        self.inlining = False
+
         if _optimize:
             from .builtins import add_pure_builtins
             add_pure_builtins(self)
