@@ -11,6 +11,7 @@ Implementated optimizations:
 
 * :ref:`Call pure builtins <call-pure>`
 * :ref:`Loop unrolling <loop-unroll>`
+* :ref:`Simplify comprehensions <compr>`
 * :ref:`Constant propagation <const-prop>`
 * :ref:`Constant folding <const-fold>`
 * :ref:`Replace builtin constants <replace-builtin-constant>`
@@ -151,6 +152,36 @@ even more interesting::
 .. note::
    Since replacing ``range()`` requires a specialization with guard, the
    optimization is only implemented at function level.
+
+
+.. _compr:
+
+Simplify comprehensions
+-----------------------
+
+Simplify list-comprehension, set-comprehension and dict-comprehension.
+Optimization similar to :ref:`Loop unrolling <loop-unroll>`, but applied
+to comprehensions.
+
+Examples (combined with :ref:`Constant folding <const-fold>`):
+
++---------------------------------+---------------------------------+-----------------------+
+| Comprehension                   | Code                            | Simplified            |
++=================================+=================================+=======================+
+| List-comprehension              | ::                              | ::                    |
+|                                 |                                 |                       |
+|                                 |  [i for i in (1, 2, 3)]         |  [1, 2, 3]            |
++---------------------------------+---------------------------------+-----------------------+
+| Set-comprehension               | ::                              | ::                    |
+|                                 |                                 |                       |
+|                                 |  {i*2 for i in "abc"}           |  {"aa", "bb", "cc"}   |
++---------------------------------+---------------------------------+-----------------------+
+| Dict-comprehension              | ::                              | ::                    |
+|                                 |                                 |                       |
+|                                 |  {i : i * 2 for i in (1, 2, 3)} |  {1: 2, 2: 4, 3: 6}   |
++---------------------------------+---------------------------------+-----------------------+
+
+:ref:`Configuration option <config>`: ``unroll_loops``.
 
 
 .. _const-prop:

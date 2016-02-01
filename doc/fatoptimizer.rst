@@ -106,7 +106,8 @@ the ``__fatoptimizer__`` variable. Configuration keys:
 
 * ``unroll_loops``: Maximum number of loop iteration for loop unrolling
   (default: ``16``). Set it to ``0`` to disable loop unrolling. See
-  :ref:`loop unrolling <loop-unroll>` optimization.
+  :ref:`loop unrolling <loop-unroll>` and :ref:`simplify comprehension <compr>`
+  optimizations.
 
 Example to disable all optimizations in a module::
 
