@@ -1,25 +1,64 @@
 import ast
 
-from .tools import OptimizerStep, pretty_dump
+from .tools import OptimizerStep, pretty_dump, NodeTransformer
 #from .specialized import BuiltinGuard
 
+class RenameVisitor(NodeTransformer):
+    def __init__(self, callsite, inlinable):
+        assert callsite.keywords == []
+        assert callsite.starargs is None
+        assert callsite.kwargs is None
+        assert inlinable.args.vararg is None
+        assert inlinable.args.kwonlyargs == []
+        assert inlinable.args.kw_defaults == []
+        assert inlinable.args.kwarg is None
+        assert inlinable.args.defaults == []
+
+        # Mapping from name in callee to name in caller
+        self.remapping = {}
+        for formal, actual in zip(inlinable.args.args, callsite.args):
+            self.remapping[formal.arg] = actual.id
+
+    def visit_Name(self, node):
+        assert isinstance(node.ctx, ast.Load) # FIXME
+        if node.id in self.remapping:
+            return ast.Name(id=self.remapping[node.id], ctx=node.ctx)
+        return node
 
 class InlineSubstitution(OptimizerStep):
     """Function call inlining."""
 
-    def can_inline(self, node):
-        '''Given a Call node, determine whether we should inline
+    def can_inline(self, callsite):
+        '''Given a Call callsite, determine whether we should inline
         the callee.  If so, return the callee FunctionDef, otherwise
         return None'''
         # TODO: size criteria?
         # TODO: don't do it if either uses locals()
         # TODO: don't do it for recursive functions
-        if not isinstance(node.func, ast.Name):
+        if not isinstance(callsite.func, ast.Name):
             return None
         from .namespace import _fndefs
-        if node.func.id not in _fndefs:
+        if callsite.func.id not in _fndefs:
             return None
-        candidate = _fndefs[node.func.id]
+        candidate = _fndefs[callsite.func.id]
+
+        # For now, only support simple positional arguments
+        if callsite.keywords:
+            return False
+        if callsite.starargs:
+            return False
+        if callsite.kwargs:
+            return False
+        if candidate.args.vararg:
+            return False
+        if candidate.args.kwonlyargs:
+            return False
+        if candidate.args.kw_defaults:
+            return False
+        if candidate.args.kwarg:
+            return False
+        if candidate.args.defaults:
+            return False
 
         # For now, only allow functions that simply return a value
         body = candidate.body
@@ -64,6 +103,8 @@ FunctionDef(name='g', args=arguments(args=[
         # Substitute the Call with the expression of the single return stmt
         # within the callee.
         # This assumes a single Return stmt
-        # FIXME: probably should be a copy of the value subtree
-        # FIXME: remap params/args
-        return inlinable.body[0].value
+        returned_expr = inlinable.body[0].value
+        # Rename params/args
+        v = RenameVisitor(node, inlinable)
+        new_expr = v.visit(returned_expr)
+        return new_expr

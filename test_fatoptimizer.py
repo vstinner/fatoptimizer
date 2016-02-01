@@ -2901,7 +2901,6 @@ class InliningTests(BaseAstTests):
                 return {'foo':42}['foo'] + 3
         ''')
 
-    @unittest.expectedFailure
     def test_remap_varnames(self):
         self.check_optimize('''
             def g(y):
