@@ -14,12 +14,14 @@ class Checker(NodeVisitor):
             if node.func.id == 'locals':
                 self.problems.append('use of locals()')
 
+
 def locate_kwarg(funcdef, name):
     '''Get the index of an argument of funcdef by name.'''
     for idx, arg in enumerate(funcdef.args.args):
         if arg.arg == name:
             return idx
     raise ValueError('argument %r not found' % name)
+
 
 class RenameVisitor(NodeTransformer):
     def __init__(self, callsite, inlinable, actual_pos_args):
@@ -41,6 +43,7 @@ class RenameVisitor(NodeTransformer):
             return self.remapping[node.id]
         return node
 
+
 class Expansion:
     '''Information about a callsite that's a candidate for inlining, giving
     the funcdef, and the actual positional arguments (having
@@ -48,6 +51,7 @@ class Expansion:
     def __init__(self, funcdef, actual_pos_args):
         self.funcdef = funcdef
         self.actual_pos_args = actual_pos_args
+
 
 class InlineSubstitution(OptimizerStep):
     """Function call inlining."""
