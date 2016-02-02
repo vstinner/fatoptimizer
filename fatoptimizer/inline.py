@@ -9,7 +9,7 @@ class Checker(NodeVisitor):
 
     def visit_Call(self, node):
         # Reject explicit attempts to use locals()
-        # TODO: detect uses via other names
+        # FIXME: detect uses via other names
         if isinstance(node.func, ast.Name):
             if node.func.id == 'locals':
                 self.problems.append('use of locals()')
@@ -56,8 +56,8 @@ class InlineSubstitution(OptimizerStep):
         '''Given a Call callsite, determine whether we should inline
         the callee.  If so, return an Expansion instance, otherwise
         return None.'''
-        # TODO: size criteria?
-        # TODO: don't do it for recursive functions
+        # FIXME: size criteria?
+        # FIXME: don't do it for recursive functions
         if not isinstance(callsite.func, ast.Name):
             return None
         from .namespace import _fndefs
@@ -128,7 +128,7 @@ class InlineSubstitution(OptimizerStep):
         if not self.config.inlining:
             return
 
-        # TODO: renaming variables to avoid clashes
+        # FIXME: renaming variables to avoid clashes
         # or do something like:
         #   .saved_locals = locals()
         #   set params to args
@@ -136,7 +136,7 @@ class InlineSubstitution(OptimizerStep):
         #   locals() = .saved_locals
         #   how to things that aren't just a return
         #   how to handle early return
-        # TODO: what guards are needed?
+        # FIXME: what guards are needed?
         # etc
         expansion = self.can_inline(node)
         if not expansion:
