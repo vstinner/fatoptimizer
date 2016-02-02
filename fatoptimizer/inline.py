@@ -56,6 +56,31 @@ class Expansion:
 class InlineSubstitution(OptimizerStep):
     """Function call inlining."""
 
+    def build_positional_args(self, candidate, callsite):
+        """Attempt to convert the positional and keyword args supplied at
+        the given callsite to the positional args expected by the candidate
+        funcdef.
+
+        Return a list of ast.Node instances, or raise ValueError if it
+        can't be done.
+        """
+        if len(callsite.args) > len(candidate.args.args):
+            raise ValueError('too many positional arguments')
+        slots = {}
+        for idx, arg in enumerate(callsite.args):
+            slots[idx] = arg
+        for actual_kwarg in callsite.keywords:
+            idx = locate_kwarg(candidate, actual_kwarg.arg)
+            if idx in slots:
+                raise ValueError('positional slot %i already filled' % idx)
+            slots[idx] = actual_kwarg.value
+        actual_pos_args = []
+        for idx in range(len(candidate.args.args)):
+            if idx not in slots:
+                raise ValueError('argument %i not filled' % idx)
+            actual_pos_args.append(slots[idx])
+        return actual_pos_args
+
     def can_inline(self, callsite):
         '''Given a Call callsite, determine whether we should inline
         the callee.  If so, return an Expansion instance, otherwise
@@ -88,22 +113,8 @@ class InlineSubstitution(OptimizerStep):
 
         # Attempt to match up the calling convention at the callsite
         # with the candidate funcdef
-        if len(callsite.args) > len(candidate.args.args):
-            return None
-        actual_pos_args = []
         try:
-            slots = {}
-            for idx, arg in enumerate(callsite.args):
-                slots[idx] = arg
-            for actual_kwarg in callsite.keywords:
-                idx = locate_kwarg(candidate, actual_kwarg.arg)
-                if idx in slots:
-                    raise ValueError('positional slot %i already filled' % idx)
-                slots[idx] = actual_kwarg.value
-            for idx in range(len(candidate.args.args)):
-                if idx not in slots:
-                    raise ValueError('argument %i not filled' % idx)
-                actual_pos_args.append(slots[idx])
+            actual_pos_args = self.build_positional_args(candidate, callsite)
         except ValueError:
             return None
         # For now, only allow functions that simply return a value
