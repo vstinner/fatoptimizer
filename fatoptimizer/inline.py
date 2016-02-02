@@ -88,9 +88,6 @@ class InlineSubstitution(OptimizerStep):
 
         # Attempt to match up the calling convention at the callsite
         # with the candidate funcdef
-        if 0:
-            print(pretty_dump(callsite))
-            print(pretty_dump(candidate))
         if len(callsite.args) > len(candidate.args.args):
             return None
         actual_pos_args = []
@@ -109,8 +106,6 @@ class InlineSubstitution(OptimizerStep):
                 actual_pos_args.append(slots[idx])
         except ValueError:
             return None
-        if 0:
-            print(actual_pos_args)
         # For now, only allow functions that simply return a value
         body = candidate.body
         if len(body) != 1:
@@ -146,8 +141,6 @@ class InlineSubstitution(OptimizerStep):
         if not expansion:
             return node
         funcdef = expansion.funcdef
-        if 0:
-            print(pretty_dump(funcdef))
         # Substitute the Call with the expression of the single return stmt
         # within the callee.
         # This assumes a single Return or Pass stmt
