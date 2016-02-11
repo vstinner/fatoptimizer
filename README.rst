@@ -2,6 +2,10 @@
 fatoptimizer
 ************
 
+.. image:: https://travis-ci.org/haypo/fatoptimizer.svg?branch=master
+   :alt: Build status of fatoptimizer on Travis CI
+   :target: https://travis-ci.org/haypo/fatoptimizer
+
 ``fatoptimizer`` is a static optimizer for Python 3.6 using function
 specialization with guards. It is implemented as an AST optimizer.
 
@@ -17,3 +21,5 @@ function was specialized.
 * `fat module <https://fatoptimizer.readthedocs.org/en/latest/fat.html>`_
 * `FAT Python
   <https://faster-cpython.readthedocs.org/fat_python.html#fat-python>`_
+* `fatoptimizer tests running on the Travis-CI
+  <https://travis-ci.org/haypo/fatoptimizer>`_
