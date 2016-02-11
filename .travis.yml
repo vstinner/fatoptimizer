@@ -1,0 +1,6 @@
+language: python
+python:
+  - "3.4"
+# Use tox-travis to reuse tox.ini (not duplicate config)
+install: pip install tox-travis
+script: tox
