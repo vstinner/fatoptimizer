@@ -585,8 +585,10 @@ class ReplaceVariable(NodeTransformer, RestrictToFunctionDefMixin):
         # Mapping (dict or whatever): old name => new name
         self.name_mapping = name_mapping
 
+
     def replace_func_def(self, node):
         return self.generic_visit(node)
+
 
     def visit_Name(self, node):
         if node.id not in self.name_mapping:

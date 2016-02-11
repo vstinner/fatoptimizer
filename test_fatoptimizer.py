@@ -2829,6 +2829,19 @@ class InliningTests(BaseAstTests):
                 return 42 + 3
         ''')
 
+    def test_nested_function(self):
+        self.check_optimize('''
+            def f(x):
+                def g(x):
+                    return 100
+                return g(x) + 3
+        ''', '''
+            def f(x):
+                def g(x):
+                    return 100
+                return 100 + 3
+        ''')
+
     # It shouldn't matter if the caller is defined before the callee,
     # but currently it does
     @unittest.expectedFailure
@@ -2858,6 +2871,19 @@ class InliningTests(BaseAstTests):
                 return (x * x) + 3
         ''')
 
+    def test_constant(self):
+        self.check_optimize('''
+            def g(x):
+                return x * x
+            def f(x):
+                return g(7) + 3
+        ''', '''
+            def g(x):
+                return x * x
+            def f(x):
+                return (7 * 7) + 3
+        ''')
+
     def test_self_recursive(self):
         self.check_dont_optimize('''
             def f(x):
@@ -2871,6 +2897,22 @@ class InliningTests(BaseAstTests):
                 return g(x)
             def g(x):
                 return f(x)
+        ''')
+
+    def test_not_enough_positional_args(self):
+        self.check_dont_optimize('''
+            def g(x):
+                return x * x
+            def f(x):
+                return g() + 3
+        ''')
+
+    def test_too_many_positional_args(self):
+        self.check_dont_optimize('''
+            def g(x):
+                return x * x
+            def f(p, q, r):
+                return g(p, q, r) + 3
         ''')
 
     @unittest.expectedFailure
@@ -2887,6 +2929,31 @@ class InliningTests(BaseAstTests):
                 return (1, 2, 3)[0] + 3
         ''')
 
+    def test_keyword_args(self):
+        self.check_optimize('''
+            def g(foo, bar):
+                return foo * bar
+            def f(x, y):
+                return g(foo=x, bar=y) + 3
+        ''', '''
+            def g(foo, bar):
+                return foo * bar
+            def f(x, y):
+                return (x * y) + 3
+        ''')
+    def test_keyword_args_reversed(self):
+        self.check_optimize('''
+            def g(foo, bar):
+                return foo * bar
+            def f(x, y):
+                return g(bar=x, foo=y) + 3
+        ''', '''
+            def g(foo, bar):
+                return foo * bar
+            def f(x, y):
+                return (y * x) + 3
+        ''')
+
     @unittest.expectedFailure
     def test_kwargs(self):
         self.check_optimize('''
@@ -2901,7 +2968,6 @@ class InliningTests(BaseAstTests):
                 return {'foo':42}['foo'] + 3
         ''')
 
-    @unittest.expectedFailure
     def test_remap_varnames(self):
         self.check_optimize('''
             def g(y):
@@ -2915,22 +2981,68 @@ class InliningTests(BaseAstTests):
                 return (x * x) + 3
         ''')
 
-    @unittest.expectedFailure
-    def test_use_of_locals(self):
+    def test_callee_uses_locals(self):
         self.check_dont_optimize('''
-            def f(x):
-                return g(x)
-            def g(x):
+            def g1(y):
                 return locals()
-        ''')
-        self.check_dont_optimize('''
-            def f(x):
-                print(locals())
-                return g(x)
-            def g(x):
-                return x * x
+            def f1(x):
+                return g1(x)
         ''')
 
+    def test_caller_uses_locals(self):
+        self.check_optimize('''
+            def g2(y):
+                return y * y
+            def f2(x):
+                a = g2(x)
+                print(locals())
+                return a
+        ''', '''
+            def g2(y):
+                return y * y
+            def f2(x):
+                a = x * x
+                print(locals())
+                return a
+        ''')
+
+    def test_compound_expression(self):
+        self.check_optimize('''
+            def discriminant(a, b, c):
+                return (b * b) - (4 * a * c)
+            def count_real_solutions(a, b, c):
+                d = discriminant(a, b, c)
+                if d > 0:
+                   return 2
+                elif d == 0:
+                   return 1
+                else:
+                   return 0
+        ''', '''
+            def discriminant(a, b, c):
+                return (b * b) - (4 * a * c)
+            def count_real_solutions(a, b, c):
+                d = (b * b) - (4 * a * c)
+                if d > 0:
+                   return 2
+                elif d == 0:
+                   return 1
+                else:
+                   return 0
+        ''')
+
+    def test_pass(self):
+        self.check_optimize('''
+            def noop(a, b, c):
+                pass
+            def caller_of_noop(x):
+                a = noop(x, 4, 'foo')
+        ''', '''
+            def noop(a, b, c):
+                pass
+            def caller_of_noop(x):
+                a = None
+        ''')
 
 class ModuleConfigTests(BaseAstTests):
     def get_config(self, config_dict):
