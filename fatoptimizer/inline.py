@@ -24,6 +24,8 @@ def locate_kwarg(funcdef, name):
 
 
 class RenameVisitor(NodeTransformer):
+    # FIXME: Reuse tools.ReplaceVariable
+
     def __init__(self, callsite, inlinable, actual_pos_args):
         assert callsite.starargs is None
         assert callsite.kwargs is None
