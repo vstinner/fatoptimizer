@@ -2,6 +2,10 @@
 fatoptimizer
 ************
 
+.. image:: https://img.shields.io/pypi/v/fatoptimizer.svg
+   :alt: Latest release on the Python Cheeseshop (PyPI)
+   :target: https://pypi.python.org/pypi/fatoptimizer
+
 .. image:: https://travis-ci.org/haypo/fatoptimizer.svg?branch=master
    :alt: Build status of fatoptimizer on Travis CI
    :target: https://travis-ci.org/haypo/fatoptimizer
