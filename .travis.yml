@@ -1,4 +1,6 @@
 language: python
 python:
   - "3.4"
+# no dependency
+install:
 script: python test_fatoptimizer.py
