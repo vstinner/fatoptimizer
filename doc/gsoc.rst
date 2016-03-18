@@ -92,9 +92,13 @@ Milestone 0 to select the student
 
 fatoptimizer:
 
-* Download fatoptimizer: http://fatoptimizer.readthedocs.org/
-* Run tests
-* Read the fatoptimizer tests
+* Download `fatoptimizer <http://fatoptimizer.readthedocs.org/>`_ and run tests::
+
+    git clone https://github.com/haypo/fatoptimizer
+    cd fatoptimizer
+    python3 test_fatoptimizer.py
+
+* Read the `fatoptimizer documentation <http://fatoptimizer.readthedocs.org/>`_
 * Pick a simple task in the :ref:`fatoptimizer TODO list <todo>` and send a
   pull request
 * (More items may be added later)
