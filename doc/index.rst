@@ -51,4 +51,5 @@ Table Of Contents
    microbenchmarks
    changelog
    todo
+   gsoc
    misc
