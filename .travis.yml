@@ -2,6 +2,7 @@ sudo: false
 language: python
 python:
   - "3.4"
+  - "3.5"
 # no dependency
 install:
 script: python test_fatoptimizer.py
