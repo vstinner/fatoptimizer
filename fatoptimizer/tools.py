@@ -602,3 +602,37 @@ def Call(**kw):
         return ast.Call(**kw)
     else:
         return ast.Call(starargs=None, kwargs=None, **kw)
+
+
+def get_starargs(callsite):
+    if not isinstance(callsite, ast.Call):
+        raise ValueError("ast.Call expected, got %s" % type(callsite))
+    if sys.version_info >= (3, 5):
+        for arg in callsite.args:
+            if isinstance(arg, ast.Starred):
+                return arg.value
+        return None
+    else:
+        return callsite.starargs
+
+
+def get_keywords(callsite):
+    if not isinstance(callsite, ast.Call):
+        raise ValueError("ast.Call expected, got %s" % type(callsite))
+    keywords = callsite.keywords
+    if sys.version_info < (3, 5) and callsite.kwargs is not None:
+        keywords = keywords.copy()
+        keywords.append(ast.keyword(arg=None, value=callsite.kwargs))
+    return keywords
+
+
+def get_varkeywords(callsite):
+    if not isinstance(callsite, ast.Call):
+        raise ValueError("ast.Call expected, got %s" % type(callsite))
+    if sys.version_info >= (3, 5):
+        for arg in callsite.keywords:
+            if arg.arg is None:
+                return arg.value
+        return None
+    else:
+        return callsite.kwargs

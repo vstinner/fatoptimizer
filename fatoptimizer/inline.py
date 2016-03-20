@@ -1,6 +1,7 @@
 import ast
 
-from .tools import OptimizerStep, pretty_dump, NodeTransformer, NodeVisitor
+from .tools import (OptimizerStep, NodeTransformer, NodeVisitor,
+                    pretty_dump, get_starargs, get_varkeywords)
 
 class Checker(NodeVisitor):
     '''Gather a list of problems that would prevent inlining a function.'''
@@ -27,8 +28,8 @@ class RenameVisitor(NodeTransformer):
     # FIXME: Reuse tools.ReplaceVariable
 
     def __init__(self, callsite, inlinable, actual_pos_args):
-        assert callsite.starargs is None
-        assert callsite.kwargs is None
+        assert get_starargs(callsite) is None
+        assert not get_varkeywords(callsite) is not None
         assert inlinable.args.vararg is None
         assert inlinable.args.kwonlyargs == []
         assert inlinable.args.kw_defaults == []
@@ -98,9 +99,9 @@ class InlineSubstitution(OptimizerStep):
 
         # For now, only support simple positional arguments
         # and keyword arguments
-        if callsite.starargs:
+        if get_starargs(callsite) is not None:
             return False
-        if callsite.kwargs:
+        if get_varkeywords(callsite) is not None:
             return False
         if candidate.args.vararg:
             return False

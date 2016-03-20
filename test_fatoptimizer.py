@@ -85,6 +85,63 @@ class SpecializeConstant(ast.NodeTransformer):
         return specialize_constant(node, node.value)
 
 
+class AstToolsTests(unittest.TestCase):
+    def test_get_starargs(self):
+        tree = compile_ast('func()')
+        node = fatoptimizer.tools.get_starargs(tree.body[0].value)
+        self.assertIsNone(node)
+
+        tree = compile_ast('func(arg, *varargs)')
+        node = fatoptimizer.tools.get_starargs(tree.body[0].value)
+        self.assertIsInstance(node, ast.Name)
+        self.assertEqual(node.id, 'varargs')
+
+        tree = compile_ast('func()')
+        with self.assertRaises(ValueError):
+            fatoptimizer.tools.get_starargs(tree)
+
+    def test_get_keywords(self):
+        tree = compile_ast('func()')
+        keywords = fatoptimizer.tools.get_keywords(tree.body[0].value)
+        self.assertFalse(keywords)
+
+        tree = compile_ast('func(x=1, y=2)')
+        keywords = fatoptimizer.tools.get_keywords(tree.body[0].value)
+        self.assertEqual(len(keywords), 2)
+        self.assertIsInstance(keywords[0], ast.keyword)
+        self.assertEqual(keywords[0].arg, 'x')
+        self.assertIsInstance(keywords[1], ast.keyword)
+        self.assertEqual(keywords[1].arg, 'y')
+
+        tree = compile_ast('func(arg, *varargs, **kwargs)')
+        keywords = fatoptimizer.tools.get_keywords(tree.body[0].value)
+        self.assertEqual(len(keywords), 1)
+        self.assertIsInstance(keywords[0], ast.keyword)
+        self.assertIsNone(keywords[0].arg)
+
+        tree = compile_ast('func()')
+        with self.assertRaises(ValueError):
+            fatoptimizer.tools.get_keywords(tree)
+
+    def test_get_varkeywords(self):
+        tree = compile_ast('func()')
+        keywords = fatoptimizer.tools.get_varkeywords(tree.body[0].value)
+        self.assertFalse(keywords)
+
+        tree = compile_ast('func(x=1, y=2)')
+        keywords = fatoptimizer.tools.get_varkeywords(tree.body[0].value)
+        self.assertFalse(keywords)
+
+        tree = compile_ast('func(arg, *varargs, **kwargs)')
+        varkwds = fatoptimizer.tools.get_varkeywords(tree.body[0].value)
+        self.assertIsInstance(varkwds, ast.Name)
+        self.assertEqual(varkwds.id, 'kwargs')
+
+        tree = compile_ast('func()')
+        with self.assertRaises(ValueError):
+            fatoptimizer.tools.get_varkeywords(tree)
+
+
 class VariableVisitorTests(unittest.TestCase):
     def check_vars(self, code, local_variables, global_variables=None,
                    nonlocal_variables=None,
@@ -2941,6 +2998,7 @@ class InliningTests(BaseAstTests):
             def f(x, y):
                 return (x * y) + 3
         ''')
+
     def test_keyword_args_reversed(self):
         self.check_optimize('''
             def g(foo, bar):
