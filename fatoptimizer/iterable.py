@@ -1,7 +1,7 @@
 import ast
 
 from .tools import (OptimizerStep,
-    get_literal, copy_lineno, get_constant,
+    get_literal, copy_lineno, get_constant, get_keywords,
     UNSET, ITERABLE_TYPES)
 from .specialized import BuiltinGuard
 
@@ -61,7 +61,7 @@ class SimplifyIterableSpecialize(BaseSimplifyIterable):
     def optimize_range(self, node):
         if not(1 <= len(node.args) <= 3):
             return
-        if node.keywords:
+        if get_keywords(node):
             return
         args = []
         for node_arg in node.args:

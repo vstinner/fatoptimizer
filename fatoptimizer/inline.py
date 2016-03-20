@@ -1,7 +1,7 @@
 import ast
 
 from .tools import (OptimizerStep, NodeTransformer, NodeVisitor,
-                    pretty_dump, get_starargs, get_varkeywords)
+                    pretty_dump, get_starargs, get_keywords, get_varkeywords)
 
 class Checker(NodeVisitor):
     '''Gather a list of problems that would prevent inlining a function.'''
@@ -72,7 +72,7 @@ class InlineSubstitution(OptimizerStep):
         slots = {}
         for idx, arg in enumerate(callsite.args):
             slots[idx] = arg
-        for actual_kwarg in callsite.keywords:
+        for actual_kwarg in get_keywords(callsite):
             idx = locate_kwarg(candidate, actual_kwarg.arg)
             if idx in slots:
                 raise ValueError('positional slot %i already filled' % idx)

@@ -1,4 +1,4 @@
-from .tools import UNSET, get_literal
+from .tools import UNSET, get_literal, get_keywords
 
 
 class PureFunction:
@@ -39,7 +39,7 @@ class PureFunction:
         return True
 
     def get_args(self, node):
-        if node.keywords:
+        if get_keywords(node):
             # FIXME: support keywords
             return
 
