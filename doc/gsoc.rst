@@ -5,6 +5,11 @@ Google Summer of Code
 Google Summer of Code and the PSF
 =================================
 
+The `Google Summer of Code <https://summerofcode.withgoogle.com/>`_ (GSoC) "is
+a global program focused on bringing more student developers into open source
+software development. Students work with an open source organization on a 3
+month programming project during their break from school."
+
 The `Python Software Foundation <https://www.python.org/psf/>`_ is part of
 the Google Summer of Code (GSoC) program in 2016, as previous years. See:
 
