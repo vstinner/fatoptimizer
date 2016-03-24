@@ -106,7 +106,8 @@ fatoptimizer:
 * Read the `fatoptimizer documentation <http://fatoptimizer.readthedocs.org/>`_
 * Pick a simple task in the :ref:`fatoptimizer TODO list <todo>` and send a
   pull request
-* (More items may be added later)
+* MANDATORY: Submit a final PDF proposal: see
+  https://wiki.python.org/moin/SummerOfCode/2016 for a template
 
 Optional:
 
