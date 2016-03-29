@@ -8,8 +8,8 @@ fatoptimizer TODO list
 Easy issues, for new contributors
 =================================
 
-* Complete fatoptimizer/methods.py to suppore more pure methods
-* Complete fatoptimizer/builtins.py to suppore more pure builtin functions
+* Complete fatoptimizer/methods.py to support more pure methods.
+* Complete fatoptimizer/builtins.py to support more pure builtin functions.
 
 
 Goal
