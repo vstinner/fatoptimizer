@@ -512,7 +512,7 @@ Comparison with the peephole optimizer
 ======================================
 
 The `CPython peephole optimizer
-<https://faster-cpython.readthedocs.org/bytecode.html#cpython-peephole-optimizer>`_
+<https://faster-cpython.readthedocs.io/bytecode.html#cpython-peephole-optimizer>`_
 only implements a few optimizations: :ref:`constant folding <const-fold>`,
 :ref:`dead code elimination <dead-code>` and optimizations of jumps.
 fatoptimizer implements more :ref:`optimizations <optim>`.

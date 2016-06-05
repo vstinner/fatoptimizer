@@ -54,7 +54,7 @@ def main():
         'license': 'MIT license',
         'description': DESCRIPTION,
         'long_description': long_description,
-        'url': 'https://fatoptimizer.readthedocs.org/en/latest/',
+        'url': 'https://fatoptimizer.readthedocs.io/en/latest/',
         'author': 'Victor Stinner',
         'author_email': 'victor.stinner@gmail.com',
         'classifiers': CLASSIFIERS,

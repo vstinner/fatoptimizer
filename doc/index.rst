@@ -21,13 +21,13 @@ function is specialized.
 Links:
 
 * `fatoptimizer documentation
-  <https://fatoptimizer.readthedocs.org/en/latest/>`_ (this documentation)
+  <https://fatoptimizer.readthedocs.io/en/latest/>`_ (this documentation)
 * `fatoptimizer project at GitHub
   <https://github.com/haypo/fatoptimizer>`_ (code, bug tracker)
 * `fatoptimizer project at the Python Cheeseshop (PyPI)
   <https://pypi.python.org/pypi/fatoptimizer>`_ (download releases)
 * `FAT Python
-  <https://faster-cpython.readthedocs.org/fat_python.html>`_
+  <https://faster-cpython.readthedocs.io/fat_python.html>`_
 * `fatoptimizer tests running on the Travis-CI
   <https://travis-ci.org/haypo/fatoptimizer>`_
 
