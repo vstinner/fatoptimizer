@@ -25,7 +25,7 @@ As written above, it's really hard to mimic exactly CPython behaviour. For
 example, in CPython, it's technically possible to modify local variables of a
 function from anywhere, a function can modify its caller, or a thread B can
 modify a thread A (just for fun). See `Everything in Python is mutable
-<https://faster-cpython.readthedocs.org/mutable.html>`_ for more information.
+<https://faster-cpython.readthedocs.io/mutable.html>`_ for more information.
 It's also hard to support all introspections features like ``locals()``
 (``vars()``, ``dir()``), ``globals()`` and
 ``sys._getframe()``.
