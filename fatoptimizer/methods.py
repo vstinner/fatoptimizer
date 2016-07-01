@@ -53,5 +53,17 @@ def add_pure_methods(config):
         check_args=check_encoding,
         exceptions=UnicodeEncodeError)
     # FIXME: add more str methods
+    add(str, 'lower', 0)
+    add(str, 'upper', 0)
+    add(str, 'capitalize', 0)
+    add(str, 'swapcase', 0)
+    add(str, 'casefold', 0)
+    add(str, 'isalpha', 0)
+    add(str, 'isalnum', 0)
+    add(str, 'isdecimal', 0)
+    add(str, 'isdigit', 0)
+    add(str, 'islower', 0)
+    add(str, 'isnumeric', 0)
+    add(str, 'isupper', 0)
 
     # FIXME: tuple: count, index
