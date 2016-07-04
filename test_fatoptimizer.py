@@ -3206,6 +3206,19 @@ class CallPureMethodTests(BaseAstTests):
         self.check_dont_optimize(r'"ab\xff".encode("big5")')
         self.check_dont_optimize(r'"ab\xff".encode("ascii", "backslashreplace")')
 
+    def test_str(self):
+        self.check_optimize(r'"ABC".lower()', '"abc"')
+        self.check_optimize(r'"ABC".upper()', '"ABC"')
+        self.check_optimize(r'"abc".capitalize()', '"Abc"')
+        self.check_optimize(r'"aBc".swapcase()', '"AbC"')
+        self.check_optimize(r'"ABC".casefold()', '"abc"')
+        self.check_optimize(r'"abc".isalpha()', 'True')
+        self.check_optimize(r'"abc123".isalnum()', 'True')
+        self.check_optimize(r'"1".isdecimal()', 'True')
+        self.check_optimize(r'"1".isdigit()', 'True')
+        self.check_optimize(r'"abc".islower()', 'True')
+        self.check_optimize(r'"1".isnumeric()', 'True')
+        self.check_optimize(r'"ABC".isupper()', 'True')
 
 if __name__ == "__main__":
     unittest.main()
