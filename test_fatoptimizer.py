@@ -3219,6 +3219,12 @@ class CallPureMethodTests(BaseAstTests):
         self.check_optimize(r'"abc".islower()', 'True')
         self.check_optimize(r'"1".isnumeric()', 'True')
         self.check_optimize(r'"ABC".isupper()', 'True')
+        self.check_optimize(r'"1".isidentifier()', 'False')
+        self.check_optimize(r'"def".isidentifier()', 'True')
+        self.check_optimize(r'"A Title".istitle()', 'True')
+        self.check_optimize(r'" ".isspace()', 'True')
+        self.check_optimize(r'"AbC".swapcase()', '"aBc"')
+        self.check_optimize(r'"hello world".title()', '"Hello World"')
 
 if __name__ == "__main__":
     unittest.main()

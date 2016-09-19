@@ -65,5 +65,11 @@ def add_pure_methods(config):
     add(str, 'islower', 0)
     add(str, 'isnumeric', 0)
     add(str, 'isupper', 0)
+    add(str, 'isidentifier', 0)
+    add(str, 'istitle', 0)
+    add(str, 'isspace', 0)
+    add(str, 'swapcase', 0)
+    add(str, 'title', 0)
+
 
     # FIXME: tuple: count, index
