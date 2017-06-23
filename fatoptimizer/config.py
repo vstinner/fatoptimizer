@@ -125,7 +125,7 @@ class Config:
         self.replace_builtin_constant = False
         self.remove_dead_code = False
         self.simplify_iterable = False
-        self.inlining = False
+        # inlining is disabled, too experimental and buggy
 
     def enable_all(self):
         self.max_constant_size = 1024   # 1 KB
