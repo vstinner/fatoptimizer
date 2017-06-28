@@ -24,6 +24,15 @@ def check_encoding(args):
     return True
 
 
+def check_bytetype(args):
+    return all(isinstance(arg, bytes) for arg in args)
+
+
+def check_byte_or_int(*args):
+    return all(isinstance(arg, bytes) or ((isinstance(arg, int) and 0 <= arg <= 255))
+               for arg in args)
+
+
 def add_pure_methods(config):
     def add(obj_type, name, *args, **kw):
         if obj_type not in config._pure_methods:
@@ -35,7 +44,52 @@ def add_pure_methods(config):
     add(bytes, 'decode', (0, 2), str, str,
         check_args=check_encoding,
         exceptions=UnicodeDecodeError)
-    # FIXME: add more bytes methods
+    add(bytes, 'count', (1, 3), object, int, int,
+        check_args=check_byte_or_int,
+        exceptions=TypeError)
+    add(bytes, 'endswith', (1, 3), tuple, int, int)
+    add(bytes, 'find', (1, 3), object, int, int,
+        check_args= check_byte_or_int,
+        exceptions=TypeError)
+    add(bytes, 'index', (1, 3), object, int, int,
+        check_args= check_byte_or_int,
+        exceptions=TypeError)
+
+    add(bytes, 'join', (0,1), object,
+        check_args=check_bytetype,
+        exceptions=TypeError)
+    add(bytes, 'maketrans', 2, bytes, bytes)
+    add(bytes, 'partition', 1, bytes)
+    add(bytes, 'replace', (2,3), bytes, bytes, int)
+    add(bytes, 'rfind', (1, 3), bytes, int, int)
+    add(bytes, 'rindex', (1, 3), bytes, int, int)
+    add(bytes, 'rpartition', 1, bytes)
+    add(bytes, 'startswith', (1, 3), bytes, int, int)
+    add(bytes, 'translate', (1, 2), bytes, bytes)
+    add(bytes, 'center', (1, 2), int, str)
+    add(bytes, 'ljust', (1, 2), int, str)
+    add(bytes, 'lstrip', (1, 2), bytes)
+    add(bytes, 'rjust', (1, 2), int, str)
+    add(bytes, 'rstrip', (0, 1), bytes)
+    add(bytes, 'rsplit', (0, 2), bytes, int)
+    add(bytes, 'split', (0, 2), bytes, int)
+    add(bytes, 'strip', (0, 1), bytes)
+    add(bytes, 'capitalize', 0)
+    add(bytes, 'expandtabs', (0, 1), int)
+    add(bytes, 'isalnum', 0)
+    add(bytes, 'isalpha', 0)
+    add(bytes, 'isdigit', 0)
+    add(bytes, 'islower', 0)
+    add(bytes, 'isspace', 0)
+    add(bytes, 'istitle', 0)
+    add(bytes, 'isupper', 0)
+    add(bytes, 'islower', 0)
+    add(bytes, 'splitlines', (0, 1), bool)
+    add(bytes, 'swapcase', 0)
+    add(bytes, 'title', 0)
+    add(bytes, 'upper', 0)
+    add(bytes, 'zfill', 1, int)
+
 
     # FIXME: add config option since IEEE 754 can be funny on some corner
     # cases?
