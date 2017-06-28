@@ -29,7 +29,7 @@ def check_bytetype(args):
 
 
 def check_byte_or_int(*args):
-    return all(any([isinstance(arg,bytes),(isinstance(arg,int) and arg<256 and arg >=0)]) for arg in args)
+    return all(any([isinstance(arg, bytes), (isinstance(arg, int) and 0 <= arg <= 255)]) for arg in args)
 
 
 def add_pure_methods(config):
