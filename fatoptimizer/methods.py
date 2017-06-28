@@ -25,9 +25,11 @@ def check_encoding(args):
 
 
 def check_bytetype(args):
-    for instance in args:
-        if not isinstance(instance,bytes):
-            return False
+    return all(isinstance(arg, bytes) for arg in args)
+
+
+def check_byte_or_int(*args):
+    return all(any([isinstance(arg,bytes),(isinstance(arg,int) and arg<256 and arg >=0)]) for arg in args)
 
 
 def add_pure_methods(config):
@@ -41,12 +43,20 @@ def add_pure_methods(config):
     add(bytes, 'decode', (0, 2), str, str,
         check_args=check_encoding,
         exceptions=UnicodeDecodeError)
+    add(bytes, 'count', (1, 3), object, int, int,
+        check_args= check_byte_or_int,
+        exceptions=TypeError)
     add(bytes, 'endswith', (1, 3), tuple, int, int)
-    add(bytes, 'find', (1, 3), bytes, int, int)     # FIXME: Here "sub"(that is to be found) can be both bytes and int
-    add(bytes, 'index', (1, 3), bytes, int, int)    # FIXME: Here "sub" can be both bytes and int
+    add(bytes, 'find', (1, 3), object, int, int,
+        check_args= check_byte_or_int,
+        exceptions=TypeError)
+    add(bytes, 'index', (1, 3), object, int, int,
+        check_args= check_byte_or_int,
+        exceptions=TypeError)
 
-    #FIXME: How to specify any iterable?
-    #add(bytes, 'join', (0,1), list, set, tuple, frozenset, check_args=check_bytetype, exceptions=TypeError)
+    add(bytes, 'join', (0,1), object,
+        check_args=check_bytetype,
+        exceptions=TypeError)
     add(bytes, 'maketrans', 2, bytes, bytes)
     add(bytes, 'partition', 1, bytes)
     add(bytes, 'replace', (2,3), bytes, bytes, int)
@@ -79,7 +89,6 @@ def add_pure_methods(config):
     add(bytes, 'upper', 0)
     add(bytes, 'zfill', 1, int)
 
-    # FIXME: add more bytes methods
 
     # FIXME: add config option since IEEE 754 can be funny on some corner
     # cases?

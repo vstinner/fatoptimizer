@@ -3182,6 +3182,26 @@ class CallPureMethodTests(BaseAstTests):
         self.check_dont_optimize(r'b"ab\xff".decode("big5")')
         self.check_dont_optimize(r'b"ab\xff".decode("ascii", "surrogateescape")')
 
+    def test_bytes(self):
+        self.check_optimize(r'"ABC".lower()', '"abc"')
+        self.check_optimize(r'"ABC".upper()', '"ABC"')
+        self.check_optimize(r'"abc".capitalize()', '"Abc"')
+        self.check_optimize(r'"aBc".swapcase()', '"AbC"')
+        self.check_optimize(r'"ABC".casefold()', '"abc"')
+        self.check_optimize(r'"abc".isalpha()', 'True')
+        self.check_optimize(r'"abc123".isalnum()', 'True')
+        self.check_optimize(r'"1".isdecimal()', 'True')
+        self.check_optimize(r'"1".isdigit()', 'True')
+        self.check_optimize(r'"abc".islower()', 'True')
+        self.check_optimize(r'"1".isnumeric()', 'True')
+        self.check_optimize(r'"ABC".isupper()', 'True')
+        self.check_optimize(r'"1".isidentifier()', 'False')
+        self.check_optimize(r'"def".isidentifier()', 'True')
+        self.check_optimize(r'"A Title".istitle()', 'True')
+        self.check_optimize(r'" ".isspace()', 'True')
+        self.check_optimize(r'"AbC".swapcase()', '"aBc"')
+        self.check_optimize(r'"hello world".title()', '"Hello World"')
+
     def test_float(self):
         self.check_optimize(r'(5.0).is_integer()', 'True')
         self.check_optimize(r'(1.5).as_integer_ratio()', '(3, 2)')
