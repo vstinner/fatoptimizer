@@ -1,8 +1,11 @@
-sudo: false
 language: python
-python:
-  - "3.4"
-  - "3.5"
-# no dependency
-install:
-script: python test_fatoptimizer.py
+env:
+  - TOXENV=py34
+  - TOXENV=py35
+  - TOXENV=doc
+  - TOXENV=pep8
+install: pip install -U tox
+script: tox
+notifications:
+  email:
+    - victor.stinner@gmail.com
