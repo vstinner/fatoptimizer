@@ -1,7 +1,8 @@
 language: python
+# FIXME: test also Python 3.5 and 3.6
+# https://github.com/travis-ci/travis-ci/issues/4794
 env:
   - TOXENV=py34
-  - TOXENV=py35
   - TOXENV=doc
   - TOXENV=pep8
 install: pip install -U tox
