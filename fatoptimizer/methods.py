@@ -29,7 +29,8 @@ def check_bytetype(args):
 
 
 def check_byte_or_int(*args):
-    return all(any([isinstance(arg, bytes), (isinstance(arg, int) and 0 <= arg <= 255)]) for arg in args)
+    return all(isinstance(arg, bytes) or ((isinstance(arg, int) and 0 <= arg <= 255))
+               for arg in args)
 
 
 def add_pure_methods(config):
@@ -44,7 +45,7 @@ def add_pure_methods(config):
         check_args=check_encoding,
         exceptions=UnicodeDecodeError)
     add(bytes, 'count', (1, 3), object, int, int,
-        check_args= check_byte_or_int,
+        check_args=check_byte_or_int,
         exceptions=TypeError)
     add(bytes, 'endswith', (1, 3), tuple, int, int)
     add(bytes, 'find', (1, 3), object, int, int,
