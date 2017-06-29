@@ -52,7 +52,6 @@ def add_pure_methods(config):
     add(str, 'encode', (0, 2), str, str,
         check_args=check_encoding,
         exceptions=UnicodeEncodeError)
-    # FIXME: add more str methods
     add(str, 'lower', 0)
     add(str, 'upper', 0)
     add(str, 'capitalize', 0)
