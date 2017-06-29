@@ -106,7 +106,6 @@ def add_pure_methods(config):
     add(str, 'encode', (0, 2), str, str,
         check_args=check_encoding,
         exceptions=UnicodeEncodeError)
-    # FIXME: add more str methods
     add(str, 'lower', 0)
     add(str, 'upper', 0)
     add(str, 'capitalize', 0)
@@ -124,6 +123,29 @@ def add_pure_methods(config):
     add(str, 'isspace', 0)
     add(str, 'swapcase', 0)
     add(str, 'title', 0)
-
+    add(str, 'center', (1, 2), int, str)
+    add(str, 'count', (1, 3), str, int, int)
+    add(str, 'endswith', (1, 3), str, int, int)
+    add(str, 'expandtabs', (0, 1), int)
+    add(str, 'find', (1, 3), str, int, int)
+    add(str, 'index', (1, 3), str, int, int)
+    add(str, 'isprintable', 0)
+    add(str, 'isupper', 0)
+    add(str, 'ljust', (1, 2), int, str)
+    add(str, 'lstrip', (0, 1), str)
+    add(str, 'maketrans', (1, 3), str, str, str)
+    add(str, 'partition', 1, str)
+    add(str, 'replace', (2, 3), str, str, int)
+    add(str, 'rfind', (1, 3), str, int, int)
+    add(str, 'rindex', (1, 3), str, int, int)
+    add(str, 'rjust', (1, 2), int, str)
+    add(str, 'rpartition', 1, str)
+    add(str, 'rsplit', (0, 2), str, int)
+    add(str, 'rstrip', (0, 1), str)
+    add(str, 'split', (0, 2), str, int)
+    add(str, 'splitlines', (0, 1), bool)
+    add(str, 'startswith', (1, 3), str, int, int)
+    add(str, 'strip', (0, 1), str)
+    add(str, 'zfill', 1, int)
 
     # FIXME: tuple: count, index
