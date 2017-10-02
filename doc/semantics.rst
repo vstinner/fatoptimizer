@@ -18,7 +18,7 @@ implementation must do its best to mimic CPython behaviour. We will call it the
 Python semantics.
 
 fatoptimizer should not change the Python semantics with the default
-configuration.  Optimizations modifting the Python semantics must be disabled
+configuration.  Optimizations modifying the Python semantics must be disabled
 by default: opt-in options.
 
 As written above, it's really hard to mimic exactly CPython behaviour. For
