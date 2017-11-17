@@ -23,7 +23,7 @@ Links:
 * `fatoptimizer documentation
   <https://fatoptimizer.readthedocs.io/en/latest/>`_ (this documentation)
 * `fatoptimizer project at GitHub
-  <https://github.com/haypo/fatoptimizer>`_ (code, bug tracker)
+  <https://github.com/vstinner/fatoptimizer>`_ (code, bug tracker)
 * `fatoptimizer project at the Python Cheeseshop (PyPI)
   <https://pypi.python.org/pypi/fatoptimizer>`_ (download releases)
 * `FAT Python

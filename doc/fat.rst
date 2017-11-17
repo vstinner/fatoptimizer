@@ -14,7 +14,7 @@ The ``fat`` module is required to run code optimized by ``fatoptimizer`` if at
 least one function is specialized.
 
 * `fat project at GitHub
-  <https://github.com/haypo/fat>`_
+  <https://github.com/vstinner/fat>`_
 * `fat project at the Python Cheeseshop (PyPI)
   <https://pypi.python.org/pypi/fat>`_
 

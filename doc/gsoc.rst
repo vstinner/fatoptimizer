@@ -27,7 +27,7 @@ FAT Python is a new static optimizer for Python 3.6, it specializes functions
 and use guards to decide if specialized code can be called or not. See `FAT
 Python homepage <https://faster-cpython.readthedocs.io/fat_python.html>`_ and
 the `slides of my talk at FOSDEM 2016
-<https://github.com/haypo/conf/raw/master/2016-FOSDEM/fat_python.pdf>`_ for
+<https://github.com/vstinner/conf/raw/master/2016-FOSDEM/fat_python.pdf>`_ for
 more information.
 
 The design is *inspired* by JIT compilers, but is simpler. FAT Python has been
@@ -99,7 +99,7 @@ fatoptimizer:
 
 * Download `fatoptimizer <https://fatoptimizer.readthedocs.io/>`_ and run tests::
 
-    git clone https://github.com/haypo/fatoptimizer
+    git clone https://github.com/vstinner/fatoptimizer
     cd fatoptimizer
     python3 test_fatoptimizer.py
 
