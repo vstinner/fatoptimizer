@@ -10,6 +10,10 @@ fatoptimizer
    :alt: Build status of fatoptimizer on Travis CI
    :target: https://travis-ci.org/vstinner/fatoptimizer
 
+.. image:: http://unmaintained.tech/badge.svg
+   :target: http://unmaintained.tech/
+   :alt: No Maintenance Intended
+
 ``fatoptimizer`` is a static optimizer for Python 3.6 using function
 specialization with guards. It is implemented as an AST optimizer.
 
