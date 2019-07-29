@@ -15,8 +15,6 @@ least one function is specialized.
 
 * `fat project at GitHub
   <https://github.com/vstinner/fat>`_
-* `fat project at the Python Cheeseshop (PyPI)
-  <https://pypi.python.org/pypi/fat>`_
 
 The ``fat`` module requires a Python 3.6 patched with `PEP 509 "Add a private
 version to dict" <https://www.python.org/dev/peps/pep-0509/>`_ and `PEP 510
