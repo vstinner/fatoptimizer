@@ -20,8 +20,6 @@ function was specialized.
   <https://fatoptimizer.readthedocs.io/en/latest/>`_
 * `fatoptimizer project at GitHub
   <https://github.com/vstinner/fatoptimizer>`_ (code, bug tracker)
-* `fatoptimizer project at the Python Cheeseshop (PyPI)
-  <https://pypi.python.org/pypi/fatoptimizer>`_ (download releases)
 * `fat module <https://fatoptimizer.readthedocs.io/en/latest/fat.html>`_
 * `FAT Python
   <https://faster-cpython.readthedocs.io/fat_python.html#fat-python>`_
