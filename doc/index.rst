@@ -4,10 +4,6 @@
 fatoptimizer
 ++++++++++++
 
-.. image:: https://img.shields.io/pypi/v/fatoptimizer.svg
-   :alt: Latest release on the Python Cheeseshop (PyPI)
-   :target: https://pypi.python.org/pypi/fatoptimizer
-
 .. image:: https://travis-ci.org/vstinner/fatoptimizer.svg?branch=master
    :alt: Build status of fatoptimizer on Travis CI
    :target: https://travis-ci.org/vstinner/fatoptimizer
@@ -24,8 +20,6 @@ Links:
   <https://fatoptimizer.readthedocs.io/en/latest/>`_ (this documentation)
 * `fatoptimizer project at GitHub
   <https://github.com/vstinner/fatoptimizer>`_ (code, bug tracker)
-* `fatoptimizer project at the Python Cheeseshop (PyPI)
-  <https://pypi.python.org/pypi/fatoptimizer>`_ (download releases)
 * `FAT Python
   <https://faster-cpython.readthedocs.io/fat_python.html>`_
 * `fatoptimizer tests running on the Travis-CI
