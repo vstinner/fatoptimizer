@@ -7,6 +7,7 @@ fatoptimizer changelog
 
 * Version 0.3
 
+  * Drop Python 3.4 support: Python 3.4 reached its end of life in 2019.
   * Experimental implementation of function inlining, implemented by David
     Malcolm.
   * New optimization: call pure methods of builtin types. For example,
